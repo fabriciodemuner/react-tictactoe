@@ -127,8 +127,8 @@ export const App = () => {
 
   return (
     <ChakraProvider theme={theme}>
-      <Box textAlign="center">
-        <Grid minH="100vh" p={3} templateRows="1fr 9fr">
+      <Box textAlign="center" maxWidth="900px" mx="auto">
+        <Grid height="100vh" p={3} templateRows="1fr 9fr">
           <Grid mb={4}>
             <ColorModeSwitcher ml="auto" justifySelf="flex-end" />
             <Center fontSize="xl" margin="auto" onClick={onOpen}>
