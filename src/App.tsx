@@ -57,7 +57,11 @@ const TicItem = (props: TicItemProps) => {
 };
 
 export const App = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenModal,
+    onOpen: onOpenModal,
+    onClose: onCloseModal,
+  } = useDisclosure();
   const [currentPlayer, setCurrentPlayer] = useState<"O" | "X">("O");
   const [gameOver, setGameOver] = useState(false);
   const [result, setResult] = useState<Player | "draw">();
@@ -128,11 +132,11 @@ export const App = () => {
 
   useEffect(() => {
     if (gameOver) {
-      onOpen();
+      onOpenModal();
     } else {
       setResetTics(false);
     }
-  }, [gameOver, resetTics, onOpen]);
+  }, [gameOver, resetTics, onOpenModal]);
 
   return (
     <ChakraProvider theme={theme}>
@@ -140,10 +144,10 @@ export const App = () => {
         <Grid height="100vh" p={3} templateRows="1fr 9fr">
           <Grid mb={4}>
             <ColorModeSwitcher ml="auto" justifySelf="flex-end" />
-            <Center fontSize="md" margin="auto" onClick={onOpen}>
+            <Center fontSize="md" margin="auto" onClick={onOpenModal}>
               O: {score.O} | X: {score.X} | D: {score.D}
             </Center>
-            <Center fontSize="xl" margin="auto" onClick={onOpen}>
+            <Center fontSize="xl" margin="auto" onClick={onOpenModal}>
               Player: {currentPlayer}
             </Center>
           </Grid>
@@ -220,8 +224,8 @@ export const App = () => {
 
         <Modal
           closeOnOverlayClick={false}
-          onClose={onClose}
-          isOpen={isOpen}
+          onClose={onCloseModal}
+          isOpen={isOpenModal}
           isCentered
         >
           <ModalOverlay />
@@ -240,13 +244,13 @@ export const App = () => {
                 colorScheme="blue"
                 mr={3}
                 onClick={() => {
-                  onClose();
+                  onCloseModal();
                   resetGame();
                 }}
               >
                 New game
               </Button>
-              <Button variant="ghost" onClick={onClose}>
+              <Button variant="ghost" onClick={onCloseModal}>
                 Close
               </Button>
             </ModalFooter>
