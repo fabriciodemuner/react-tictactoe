@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import {
   ChakraProvider,
   Box,
@@ -14,8 +15,14 @@ import {
   ModalHeader,
   ModalOverlay,
   useDisclosure,
+  Flex,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
 } from "@chakra-ui/react";
-import { ColorModeSwitcher } from "./ColorModeSwitcher";
 
 type Player = "O" | "X";
 
@@ -69,6 +76,8 @@ export const App = () => {
   const [oPlayed, setOPlayed] = useState<number[]>([]);
   const [xPlayed, setXPlayed] = useState<number[]>([]);
   const [score, setScore] = useState({ O: 0, X: 0, D: 0 });
+  const [scoreAlert, setScoreAlert] = useState(false);
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
 
   const winningPositions = [
     [1, 2, 3],
@@ -142,15 +151,20 @@ export const App = () => {
     <ChakraProvider theme={theme}>
       <Box textAlign="center" maxWidth="900px" mx="auto">
         <Grid height="100vh" p={3} templateRows="1fr 9fr">
-          <Grid mb={4}>
+          <Flex mb={4} flexDir="column">
             <ColorModeSwitcher ml="auto" justifySelf="flex-end" />
-            <Center fontSize="md" margin="auto" onClick={onOpenModal}>
-              O: {score.O} | X: {score.X} | D: {score.D}
-            </Center>
+            <Flex>
+              <Center fontSize="md" margin="auto">
+                O: {score.O} | X: {score.X} | D: {score.D}
+              </Center>
+              <Button size="sm" onClick={() => setScoreAlert(true)}>
+                Reset score
+              </Button>
+            </Flex>
             <Center fontSize="xl" margin="auto" onClick={onOpenModal}>
               Player: {currentPlayer}
             </Center>
-          </Grid>
+          </Flex>
           <Grid
             templateRows="repeat(3, 1fr)"
             templateColumns="repeat(3, 1fr)"
@@ -222,6 +236,37 @@ export const App = () => {
           </Grid>
         </Grid>
 
+        <AlertDialog
+          isOpen={scoreAlert}
+          leastDestructiveRef={cancelRef}
+          onClose={() => setScoreAlert(false)}
+        >
+          <AlertDialogOverlay>
+            <AlertDialogContent>
+              <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                Reset score
+              </AlertDialogHeader>
+
+              <AlertDialogBody>
+                Are you sure you want to reset the score?
+              </AlertDialogBody>
+
+              <AlertDialogFooter>
+                <Button ref={cancelRef} onClick={() => setScoreAlert(false)}>
+                  Cancel
+                </Button>
+                <Button
+                  colorScheme="red"
+                  onClick={() => setScoreAlert(false)}
+                  ml={3}
+                >
+                  Yes, reset
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialogOverlay>
+        </AlertDialog>
+
         <Modal
           closeOnOverlayClick={false}
           onClose={onCloseModal}
@@ -241,7 +286,7 @@ export const App = () => {
             </ModalBody>
             <ModalFooter>
               <Button
-                colorScheme="blue"
+                colorScheme="red"
                 mr={3}
                 onClick={() => {
                   onCloseModal();
