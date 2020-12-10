@@ -64,6 +64,7 @@ export const App = () => {
   const [resetTics, setResetTics] = useState(false);
   const [oPlayed, setOPlayed] = useState<number[]>([]);
   const [xPlayed, setXPlayed] = useState<number[]>([]);
+  const [score, setScore] = useState({ O: 0, X: 0, D: 0 });
 
   const winningPositions = [
     [1, 2, 3],
@@ -75,6 +76,12 @@ export const App = () => {
     [1, 5, 9],
     [3, 5, 7],
   ];
+
+  const addPoint = (p: "O" | "X" | "D") => {
+    const newScore = { ...score };
+    newScore[p]++;
+    setScore(newScore);
+  };
 
   const checkResult = (id: number) => {
     const playedArray = currentPlayer === "O" ? oPlayed : xPlayed;
@@ -88,11 +95,13 @@ export const App = () => {
     if (win) {
       setGameOver(true);
       setResult(currentPlayer);
+      addPoint(currentPlayer);
       return;
     }
     if (oPlayed.length + xPlayed.length === 9) {
       setGameOver(true);
       setResult("draw");
+      addPoint("D");
       return;
     }
     if (currentPlayer === "O") {
@@ -131,6 +140,9 @@ export const App = () => {
         <Grid height="100vh" p={3} templateRows="1fr 9fr">
           <Grid mb={4}>
             <ColorModeSwitcher ml="auto" justifySelf="flex-end" />
+            <Center fontSize="md" margin="auto" onClick={onOpen}>
+              O: {score.O} | X: {score.X} | D: {score.D}
+            </Center>
             <Center fontSize="xl" margin="auto" onClick={onOpen}>
               Player: {currentPlayer}
             </Center>
