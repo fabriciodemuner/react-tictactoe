@@ -257,7 +257,10 @@ export const App = () => {
                 </Button>
                 <Button
                   colorScheme="red"
-                  onClick={() => setScoreAlert(false)}
+                  onClick={() => {
+                    setScore({ O: 0, X: 0, D: 0 });
+                    setScoreAlert(false);
+                  }}
                   ml={3}
                 >
                   Yes, reset
