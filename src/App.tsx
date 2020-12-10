@@ -153,17 +153,20 @@ export const App = () => {
         <Grid height="100vh" p={3} templateRows="1fr 9fr">
           <Flex mb={4} flexDir="column">
             <ColorModeSwitcher ml="auto" justifySelf="flex-end" />
-            <Flex>
-              <Center fontSize="md" margin="auto">
+            <Grid gridTemplateColumns="4fr 1fr" gridTemplateRows="1fr 1fr">
+              <Center fontSize="md" ml="25%">
                 O: {score.O} | X: {score.X} | D: {score.D}
               </Center>
-              <Button size="sm" onClick={() => setScoreAlert(true)}>
+              <Button m="1" size="sm" onClick={() => setScoreAlert(true)}>
                 Reset score
               </Button>
-            </Flex>
-            <Center fontSize="xl" margin="auto" onClick={onOpenModal}>
-              Player: {currentPlayer}
-            </Center>
+              <Center fontSize="xl" ml="25%">
+                Player: {currentPlayer}
+              </Center>
+              <Button m="1" size="sm" onClick={() => onOpenModal()}>
+                Reset match
+              </Button>
+            </Grid>
           </Flex>
           <Grid
             templateRows="repeat(3, 1fr)"
