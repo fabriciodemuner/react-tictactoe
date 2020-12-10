@@ -60,6 +60,7 @@ export const App = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentPlayer, setCurrentPlayer] = useState<"O" | "X">("O");
   const [gameOver, setGameOver] = useState(false);
+  const [result, setResult] = useState<Player | "draw">();
   const [resetTics, setResetTics] = useState(false);
   const [oPlayed, setOPlayed] = useState<number[]>([]);
   const [xPlayed, setXPlayed] = useState<number[]>([]);
@@ -82,10 +83,18 @@ export const App = () => {
     winningPositions.forEach(pos => {
       if (pos.every(elem => playedArray.includes(elem))) {
         win = true;
-        setGameOver(true);
       }
     });
-    if (win) return;
+    if (win) {
+      setGameOver(true);
+      setResult(currentPlayer);
+      return;
+    }
+    if (oPlayed.length + xPlayed.length === 9) {
+      setGameOver(true);
+      setResult("draw");
+      return;
+    }
     if (currentPlayer === "O") {
       setOPlayed(playedArray);
     } else {
@@ -104,6 +113,7 @@ export const App = () => {
     setOPlayed([]);
     setXPlayed([]);
     setResetTics(true);
+    setResult(undefined);
     setGameOver(false);
   };
 
@@ -113,7 +123,7 @@ export const App = () => {
     } else {
       setResetTics(false);
     }
-  }, [gameOver, onOpen]);
+  }, [gameOver, resetTics, onOpen]);
 
   return (
     <ChakraProvider theme={theme}>
@@ -121,7 +131,7 @@ export const App = () => {
         <Grid minH="100vh" p={3} templateRows="1fr 9fr">
           <Grid mb={4}>
             <ColorModeSwitcher ml="auto" justifySelf="flex-end" />
-            <Center fontSize="xl" margin="auto" onClick={resetGame}>
+            <Center fontSize="xl" margin="auto" onClick={onOpen}>
               Player: {currentPlayer}
             </Center>
           </Grid>
@@ -204,9 +214,15 @@ export const App = () => {
         >
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Game Over!</ModalHeader>
+            <ModalHeader>{gameOver ? "Game Over!" : "Reset"}</ModalHeader>
             <ModalCloseButton />
-            <ModalBody>Player {currentPlayer} won! Start new game?</ModalBody>
+            <ModalBody>
+              {!gameOver
+                ? "The game is not finished! Start new game?"
+                : result === "draw"
+                ? `It's a Draw! Start new game?`
+                : `Player ${result} won! Start new game?`}
+            </ModalBody>
             <ModalFooter>
               <Button
                 colorScheme="blue"
