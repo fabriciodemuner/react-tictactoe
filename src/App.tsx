@@ -57,7 +57,7 @@ const TicItem = (props: TicItemProps) => {
   };
 
   return (
-    <Center onClick={handleClick} border="1px" fontSize="8xl" bg={color}>
+    <Center onClick={handleClick} border="1px" fontSize="7xl" bg={color}>
       {playedBy}
     </Center>
   );
@@ -151,19 +151,24 @@ export const App = () => {
     <ChakraProvider theme={theme}>
       <Box textAlign="center" maxWidth="900px" mx="auto">
         <Grid height="100vh" p={3} templateRows="1fr 9fr">
-          <Flex mb={4} flexDir="column">
-            <ColorModeSwitcher ml="auto" justifySelf="flex-end" />
-            <Grid gridTemplateColumns="4fr 1fr" gridTemplateRows="1fr 1fr">
-              <Center fontSize="md" ml="25%">
+          <Flex mb={4} flexDir="row">
+            <ColorModeSwitcher ml="0" width="10%" />
+            <Grid
+              gridTemplateColumns="3fr 1fr"
+              gridTemplateRows="1fr 1fr"
+              alignItems="center"
+              flex="1"
+            >
+              <Center fontSize="md" ml={`${500 / 27}%`}>
                 O: {score.O} | X: {score.X} | D: {score.D}
               </Center>
-              <Button m="1" size="sm" onClick={() => setScoreAlert(true)}>
+              <Button m="0" size="xs" onClick={() => setScoreAlert(true)}>
                 Reset score
               </Button>
-              <Center fontSize="xl" ml="25%">
+              <Center fontSize="xl" ml={`${500 / 27}%`}>
                 Player: {currentPlayer}
               </Center>
-              <Button m="1" size="sm" onClick={() => onOpenModal()}>
+              <Button size="xs" onClick={() => onOpenModal()}>
                 Reset match
               </Button>
             </Grid>
