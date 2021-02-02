@@ -24,6 +24,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import { Player, TicTile } from "./TicTile";
 
+type Result = Player | "D";
+
 export const Game = (props: ChakraProps) => {
   const {
     isOpen: isOpenModal,
@@ -33,7 +35,7 @@ export const Game = (props: ChakraProps) => {
   const [firstPlayer, setFirstPlayer] = useState<Player>("O");
   const [currentPlayer, setCurrentPlayer] = useState<Player>("O");
   const [gameOver, setGameOver] = useState(false);
-  const [result, setResult] = useState<Player | "draw">();
+  const [result, setResult] = useState<Result>();
   const [resetTics, setResetTics] = useState(false);
   const [oPlayed, setOPlayed] = useState<number[]>([]);
   const [xPlayed, setXPlayed] = useState<number[]>([]);
@@ -53,7 +55,7 @@ export const Game = (props: ChakraProps) => {
     [3, 5, 7],
   ];
 
-  const addPoint = (p: "O" | "X" | "D") => {
+  const addPoint = (p: Result) => {
     const newScore = { ...score };
     newScore[p]++;
     setScore(newScore);
@@ -76,7 +78,7 @@ export const Game = (props: ChakraProps) => {
     }
     if (oPlayed.length + xPlayed.length === 9) {
       setGameOver(true);
-      setResult("draw");
+      setResult("D");
       addPoint("D");
       return;
     }
@@ -273,7 +275,7 @@ export const Game = (props: ChakraProps) => {
           <ModalBody>
             {!gameOver
               ? "The game is not finished! If you restart the match, it will count as a draw. Start new game?"
-              : result === "draw"
+              : result === "D"
               ? `It's a Draw! Start new game?`
               : `Player ${result} won! Start new game?`}
           </ModalBody>
