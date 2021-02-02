@@ -49,7 +49,7 @@ const TicItem = (props: TicItemProps) => {
     }
   }, [resetTics]);
 
-  const handleClick = () => {
+  const handleTileClick = () => {
     if (!playedBy && !gameOver) {
       setPlayedBy(player);
       checkResult(id);
@@ -57,7 +57,7 @@ const TicItem = (props: TicItemProps) => {
   };
 
   return (
-    <Center onClick={handleClick} border="1px" fontSize="7xl" bg={color}>
+    <Center onClick={handleTileClick} border="1px" fontSize="7xl" bg={color}>
       {playedBy}
     </Center>
   );
@@ -75,6 +75,7 @@ export const App = () => {
   const [resetTics, setResetTics] = useState(false);
   const [oPlayed, setOPlayed] = useState<number[]>([]);
   const [xPlayed, setXPlayed] = useState<number[]>([]);
+  const [userTriggeredRestart, setUserTriggeredRestart] = useState(false);
   const [score, setScore] = useState({ O: 0, X: 0, D: 0 });
   const [scoreAlert, setScoreAlert] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
@@ -131,6 +132,7 @@ export const App = () => {
   };
 
   const resetGame = () => {
+    setUserTriggeredRestart(false);
     togglePlayer();
     setOPlayed([]);
     setXPlayed([]);
@@ -146,6 +148,14 @@ export const App = () => {
       setResetTics(false);
     }
   }, [gameOver, resetTics, onOpenModal]);
+
+  useEffect(() => {
+    if (userTriggeredRestart) {
+      addPoint("D");
+      resetGame();
+    }
+    // eslint-disable-next-line
+  }, [userTriggeredRestart]);
 
   return (
     <ChakraProvider theme={theme}>
@@ -169,7 +179,7 @@ export const App = () => {
                 Player: {currentPlayer}
               </Center>
               <Button size="xs" onClick={() => onOpenModal()}>
-                Reset match
+                Restart match
               </Button>
             </Grid>
           </Flex>
@@ -290,7 +300,7 @@ export const App = () => {
             <ModalCloseButton />
             <ModalBody>
               {!gameOver
-                ? "The game is not finished! Start new game?"
+                ? "The game is not finished! If you restart the match, it will count as a draw. Start new game?"
                 : result === "draw"
                 ? `It's a Draw! Start new game?`
                 : `Player ${result} won! Start new game?`}
@@ -301,7 +311,7 @@ export const App = () => {
                 mr={3}
                 onClick={() => {
                   onCloseModal();
-                  resetGame();
+                  gameOver ? resetGame() : setUserTriggeredRestart(true);
                 }}
               >
                 New game
