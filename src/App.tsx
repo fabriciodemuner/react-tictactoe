@@ -266,7 +266,8 @@ export const App = () => {
               </AlertDialogHeader>
 
               <AlertDialogBody>
-                Are you sure you want to reset the score?
+                This will reset the score and restart the match. Are you sure
+                you want to continue?
               </AlertDialogBody>
 
               <AlertDialogFooter>
@@ -277,6 +278,7 @@ export const App = () => {
                   colorScheme="red"
                   onClick={() => {
                     setScore({ O: 0, X: 0, D: 0 });
+                    resetGame();
                     setScoreAlert(false);
                   }}
                   ml={3}
