@@ -69,7 +69,8 @@ export const App = () => {
     onOpen: onOpenModal,
     onClose: onCloseModal,
   } = useDisclosure();
-  const [currentPlayer, setCurrentPlayer] = useState<"O" | "X">("O");
+  const [firstPlayer, setFirstPlayer] = useState<Player>("O");
+  const [currentPlayer, setCurrentPlayer] = useState<Player>("O");
   const [gameOver, setGameOver] = useState(false);
   const [result, setResult] = useState<Player | "draw">();
   const [resetTics, setResetTics] = useState(false);
@@ -131,9 +132,14 @@ export const App = () => {
     else setCurrentPlayer("O");
   };
 
+  const toggleFirstPlayer = () => {
+    if (firstPlayer === "O") setFirstPlayer("X");
+    else setFirstPlayer("O");
+  };
+
   const resetGame = () => {
     setUserTriggeredRestart(false);
-    togglePlayer();
+    toggleFirstPlayer();
     setOPlayed([]);
     setXPlayed([]);
     setResetTics(true);
@@ -156,6 +162,10 @@ export const App = () => {
     }
     // eslint-disable-next-line
   }, [userTriggeredRestart]);
+
+  useEffect(() => {
+    setCurrentPlayer(firstPlayer);
+  }, [firstPlayer]);
 
   return (
     <ChakraProvider theme={theme}>
