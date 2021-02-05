@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 export type Player = "O" | "X";
 
-interface TicItemProps {
+interface TicTileProps {
   id: number;
   currentPlayer: Player;
   checkResult: (id: number) => void;
@@ -11,7 +11,7 @@ interface TicItemProps {
   resetTics: boolean;
 }
 
-export const TicTile = (props: TicItemProps) => {
+export const TicTile = (props: TicTileProps) => {
   const { id, currentPlayer: player, checkResult, gameOver, resetTics } = props;
   const [playedBy, setPlayedBy] = useState<Player>();
   const color = !playedBy
