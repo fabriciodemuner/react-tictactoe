@@ -160,69 +160,15 @@ export const Game = (props: ChakraProps) => {
           templateColumns="repeat(3, 1fr)"
           gap="1"
         >
-          <TicTile
-            id={1}
-            currentPlayer={currentPlayer}
-            checkResult={checkResult}
-            gameOver={gameOver}
-            resetTics={resetTics}
-          />
-          <TicTile
-            id={2}
-            currentPlayer={currentPlayer}
-            checkResult={checkResult}
-            gameOver={gameOver}
-            resetTics={resetTics}
-          />
-          <TicTile
-            id={3}
-            currentPlayer={currentPlayer}
-            checkResult={checkResult}
-            gameOver={gameOver}
-            resetTics={resetTics}
-          />
-          <TicTile
-            id={4}
-            currentPlayer={currentPlayer}
-            checkResult={checkResult}
-            gameOver={gameOver}
-            resetTics={resetTics}
-          />
-          <TicTile
-            id={5}
-            currentPlayer={currentPlayer}
-            checkResult={checkResult}
-            gameOver={gameOver}
-            resetTics={resetTics}
-          />
-          <TicTile
-            id={6}
-            currentPlayer={currentPlayer}
-            checkResult={checkResult}
-            gameOver={gameOver}
-            resetTics={resetTics}
-          />
-          <TicTile
-            id={7}
-            currentPlayer={currentPlayer}
-            checkResult={checkResult}
-            gameOver={gameOver}
-            resetTics={resetTics}
-          />
-          <TicTile
-            id={8}
-            currentPlayer={currentPlayer}
-            checkResult={checkResult}
-            gameOver={gameOver}
-            resetTics={resetTics}
-          />
-          <TicTile
-            id={9}
-            currentPlayer={currentPlayer}
-            checkResult={checkResult}
-            gameOver={gameOver}
-            resetTics={resetTics}
-          />
+          {[...Array(9)].map((_, i) => (
+            <TicTile
+              id={i + 1}
+              currentPlayer={currentPlayer}
+              checkResult={checkResult}
+              gameOver={gameOver}
+              resetTics={resetTics}
+            />
+          ))}
         </Grid>
       </Grid>
 
