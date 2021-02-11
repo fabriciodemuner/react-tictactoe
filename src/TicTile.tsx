@@ -10,11 +10,20 @@ interface TicTileProps {
   role: Player;
   playedBy: Player | undefined;
   gameOver: boolean;
+  freeze: boolean;
   socket: Socket;
 }
 
 export const TicTile = (props: TicTileProps) => {
-  const { id, currentPlayer: player, role, playedBy, gameOver, socket } = props;
+  const {
+    id,
+    currentPlayer: player,
+    role,
+    playedBy,
+    gameOver,
+    freeze,
+    socket,
+  } = props;
   const color = !playedBy
     ? undefined
     : playedBy === "O"
@@ -22,7 +31,7 @@ export const TicTile = (props: TicTileProps) => {
     : "coral";
 
   const handleTileClick = () => {
-    if (!playedBy && !gameOver && role === player) {
+    if (!playedBy && !gameOver && !freeze && role === player) {
       socket.emit("tile-clicked", { id, player });
     }
   };

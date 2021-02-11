@@ -48,6 +48,8 @@ type GameProps = {
   result: Result | undefined;
   score: Score;
   resetRequest: boolean;
+  freeze: boolean;
+  opponentSurrender: boolean;
 } & ChakraProps;
 
 export const Game = (props: GameProps) => {
@@ -60,6 +62,8 @@ export const Game = (props: GameProps) => {
     result,
     score,
     resetRequest,
+    freeze,
+    opponentSurrender,
   } = props;
   const {
     isOpen: isOpenModal,
@@ -95,19 +99,21 @@ export const Game = (props: GameProps) => {
               m="0"
               size="xs"
               onClick={() => {
-                if (gameOver || currentPlayer === role) setScoreAlert(true);
+                if (!freeze && (gameOver || currentPlayer) === role)
+                  setScoreAlert(true);
               }}
             >
               Reset score
             </Button>
             <Center fontSize="xl" ml={`${500 / 27}%`}>
               Playing as: {role} |
-              {currentPlayer === role ? ` It's you!` : " Wait..."}
+              {freeze || currentPlayer !== role ? ` Wait` : ` Your turn`}
             </Center>
             <Button
               size="xs"
               onClick={() => {
-                if (gameOver || currentPlayer === role) openModal();
+                if (!freeze && (gameOver || currentPlayer) === role)
+                  openModal();
               }}
             >
               New match
@@ -126,6 +132,7 @@ export const Game = (props: GameProps) => {
               currentPlayer={currentPlayer}
               playedBy={tiles[(i + 1) as keyof Tiles]}
               gameOver={gameOver}
+              freeze={freeze}
               socket={socket}
             />
           ))}
@@ -158,6 +165,33 @@ export const Game = (props: GameProps) => {
                 ml={3}
               >
                 Reset
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+
+      <AlertDialog
+        isOpen={opponentSurrender}
+        leastDestructiveRef={cancelRef}
+        onClose={() => {}}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Gave Over.
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Your opponent gave up and you won. A new match will start.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button
+                ref={cancelRef}
+                onClick={() => socket.send("surrender-ok")}
+              >
+                Ok.
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
