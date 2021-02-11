@@ -5,7 +5,7 @@ import { HOST } from "./config/default";
 import { Game, Result, Tiles } from "./Game";
 import { Player } from "./TicTile";
 
-console.log(process.env.NEXT_PUBLIC_API_HOST, HOST);
+console.log(process.env.REACT_APP_API_HOST, HOST);
 const socket = io(HOST);
 export type Score = {
   O: number;
