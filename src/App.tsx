@@ -18,6 +18,7 @@ type GameState = {
   currentPlayer: Player;
   gameOver: boolean;
   resetRequest: boolean;
+  opponentSurrender: boolean;
   result: Result;
   tiles: {
     1: Player;
@@ -50,6 +51,7 @@ export const App = () => {
   const [result, setResult] = useState<Result>();
   const [score, setScore] = useState<Score>({ O: 0, X: 0, D: 0 });
   const [resetRequest, setResetRequest] = useState(false);
+  const [opponentSurrender, setOpponentSurrender] = useState(false);
 
   const setupGame = async (data: GameData) => {
     setTiles(data.tiles);
@@ -81,9 +83,13 @@ export const App = () => {
       setResult(data.result);
       setScore(data.score);
       setResetRequest(data.resetRequest);
+      setOpponentSurrender(data.opponentSurrender);
     });
 
-    socket.on("teste", (m: string) => console.log(m));
+    socket.on("opp-surrender", () => {
+      setOpponentSurrender(true);
+    });
+
     socket.on("reset-start", () => {
       setResetRequest(true);
     });
@@ -109,6 +115,7 @@ export const App = () => {
         result={result}
         score={score}
         resetRequest={resetRequest}
+        opponentSurrender={opponentSurrender}
         textAlign="center"
         maxWidth="900px"
         mx="auto"

@@ -48,6 +48,7 @@ type GameProps = {
   result: Result | undefined;
   score: Score;
   resetRequest: boolean;
+  opponentSurrender: boolean;
 } & ChakraProps;
 
 export const Game = (props: GameProps) => {
@@ -60,6 +61,7 @@ export const Game = (props: GameProps) => {
     result,
     score,
     resetRequest,
+    opponentSurrender,
   } = props;
   const {
     isOpen: isOpenModal,
@@ -158,6 +160,33 @@ export const Game = (props: GameProps) => {
                 ml={3}
               >
                 Reset
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+
+      <AlertDialog
+        isOpen={opponentSurrender}
+        leastDestructiveRef={cancelRef}
+        onClose={() => {}}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Gave Over.
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Your opponent gave up and you won. A new match will start.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button
+                ref={cancelRef}
+                onClick={() => socket.send("surrender-ok")}
+              >
+                Ok.
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
