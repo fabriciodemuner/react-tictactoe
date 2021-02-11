@@ -17,6 +17,7 @@ type GameState = {
   players: { O: string; X: string };
   currentPlayer: Player;
   gameOver: boolean;
+  freeze: boolean;
   resetRequest: boolean;
   opponentSurrender: boolean;
   result: Result;
@@ -52,6 +53,7 @@ export const App = () => {
   const [score, setScore] = useState<Score>({ O: 0, X: 0, D: 0 });
   const [resetRequest, setResetRequest] = useState(false);
   const [opponentSurrender, setOpponentSurrender] = useState(false);
+  const [freeze, setFreeze] = useState(false);
 
   const setupGame = async (data: GameData) => {
     setTiles(data.tiles);
@@ -80,13 +82,19 @@ export const App = () => {
       setTiles(data.tiles);
       setCurrentPlayer(data.currentPlayer);
       setGameOver(data.gameOver);
+      setFreeze(data.freeze);
       setResult(data.result);
       setScore(data.score);
       setResetRequest(data.resetRequest);
       setOpponentSurrender(data.opponentSurrender);
     });
 
+    socket.on("freeze", () => {
+      setFreeze(true);
+    });
+
     socket.on("opp-surrender", () => {
+      setFreeze(true);
       setOpponentSurrender(true);
     });
 
@@ -95,6 +103,7 @@ export const App = () => {
     });
     socket.on("reset-cancel", () => {
       setResetRequest(false);
+      setFreeze(false);
     });
     socket.on("user-disconnected", (message: string) => {
       console.log(message);
@@ -112,6 +121,7 @@ export const App = () => {
         role={role}
         currentPlayer={currentPlayer}
         gameOver={gameOver}
+        freeze={freeze}
         result={result}
         score={score}
         resetRequest={resetRequest}
