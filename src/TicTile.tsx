@@ -1,35 +1,29 @@
 import { Center } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { Socket } from "socket.io-client";
 
 export type Player = "O" | "X";
 
 interface TicTileProps {
   id: number;
   currentPlayer: Player;
-  checkResult: (id: number) => void;
+  role: Player;
+  playedBy: Player | undefined;
   gameOver: boolean;
-  resetTics: boolean;
+  socket: Socket;
 }
 
 export const TicTile = (props: TicTileProps) => {
-  const { id, currentPlayer: player, checkResult, gameOver, resetTics } = props;
-  const [playedBy, setPlayedBy] = useState<Player>();
+  const { id, currentPlayer: player, role, playedBy, gameOver, socket } = props;
   const color = !playedBy
     ? undefined
     : playedBy === "O"
     ? "cornflowerblue"
     : "coral";
 
-  useEffect(() => {
-    if (resetTics) {
-      setPlayedBy(undefined);
-    }
-  }, [resetTics]);
-
   const handleTileClick = () => {
-    if (!playedBy && !gameOver) {
-      setPlayedBy(player);
-      checkResult(id);
+    if (!playedBy && !gameOver && role === player) {
+      socket.emit("tile-clicked", { id, player });
     }
   };
 

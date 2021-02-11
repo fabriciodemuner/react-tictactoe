@@ -21,114 +21,59 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
+import { Socket } from "socket.io-client";
+import { Score } from "./App";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import { Player, TicTile } from "./TicTile";
 
-type Result = Player | "D";
+export type Result = Player | "D";
+export type Tiles = {
+  1: Player | undefined;
+  2: Player | undefined;
+  3: Player | undefined;
+  4: Player | undefined;
+  5: Player | undefined;
+  6: Player | undefined;
+  7: Player | undefined;
+  8: Player | undefined;
+  9: Player | undefined;
+};
 
-export const Game = (props: ChakraProps) => {
+type GameProps = {
+  socket: Socket;
+  tiles: Tiles;
+  role: Player;
+  currentPlayer: Player;
+  gameOver: boolean;
+  result: Result | undefined;
+  score: Score;
+  resetRequest: boolean;
+} & ChakraProps;
+
+export const Game = (props: GameProps) => {
+  const {
+    socket,
+    tiles,
+    role,
+    currentPlayer,
+    gameOver,
+    result,
+    score,
+    resetRequest,
+  } = props;
   const {
     isOpen: isOpenModal,
-    onOpen: onOpenModal,
-    onClose: onCloseModal,
+    onOpen: openModal,
+    onClose: closeModal,
   } = useDisclosure();
-  const [firstPlayer, setFirstPlayer] = useState<Player>("O");
-  const [currentPlayer, setCurrentPlayer] = useState<Player>("O");
-  const [gameOver, setGameOver] = useState(false);
-  const [result, setResult] = useState<Result>();
-  const [resetTics, setResetTics] = useState(false);
-  const [oPlayed, setOPlayed] = useState<number[]>([]);
-  const [xPlayed, setXPlayed] = useState<number[]>([]);
-  const [userTriggeredRestart, setUserTriggeredRestart] = useState(false);
-  const [score, setScore] = useState({ O: 0, X: 0, D: 0 });
   const [scoreAlert, setScoreAlert] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
 
-  const winningPositions = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9],
-    [1, 4, 7],
-    [2, 5, 8],
-    [3, 6, 9],
-    [1, 5, 9],
-    [3, 5, 7],
-  ];
-
-  const addPoint = (p: Result) => {
-    const newScore = { ...score };
-    newScore[p]++;
-    setScore(newScore);
-  };
-
-  const checkResult = (id: number) => {
-    const playedArray = currentPlayer === "O" ? oPlayed : xPlayed;
-    playedArray.push(id);
-    let win = false;
-    winningPositions.forEach(pos => {
-      if (pos.every(elem => playedArray.includes(elem))) {
-        win = true;
-      }
-    });
-    if (win) {
-      setGameOver(true);
-      setResult(currentPlayer);
-      addPoint(currentPlayer);
-      return;
-    }
-    if (oPlayed.length + xPlayed.length === 9) {
-      setGameOver(true);
-      setResult("D");
-      addPoint("D");
-      return;
-    }
-    if (currentPlayer === "O") {
-      setOPlayed(playedArray);
-    } else {
-      setXPlayed(playedArray);
-    }
-    togglePlayer();
-  };
-
-  const togglePlayer = () => {
-    if (currentPlayer === "O") setCurrentPlayer("X");
-    else setCurrentPlayer("O");
-  };
-
-  const toggleFirstPlayer = () => {
-    if (firstPlayer === "O") setFirstPlayer("X");
-    else setFirstPlayer("O");
-  };
-
-  const resetGame = () => {
-    setUserTriggeredRestart(false);
-    toggleFirstPlayer();
-    setOPlayed([]);
-    setXPlayed([]);
-    setResetTics(true);
-    setResult(undefined);
-    setGameOver(false);
-  };
-
   useEffect(() => {
     if (gameOver) {
-      onOpenModal();
-    } else {
-      setResetTics(false);
+      openModal();
     }
-  }, [gameOver, resetTics, onOpenModal]);
-
-  useEffect(() => {
-    if (userTriggeredRestart) {
-      addPoint("D");
-      resetGame();
-    }
-    // eslint-disable-next-line
-  }, [userTriggeredRestart]);
-
-  useEffect(() => {
-    setCurrentPlayer(firstPlayer);
-  }, [firstPlayer]);
+  }, [gameOver, openModal]);
 
   return (
     <Box {...props}>
@@ -142,16 +87,30 @@ export const Game = (props: ChakraProps) => {
             flex="1"
           >
             <Center fontSize="md" ml={`${500 / 27}%`}>
-              O: {score.O} | X: {score.X} | D: {score.D}
+              {Object.entries(score)
+                .map(el => `${el[0]}: ${el[1]}`)
+                .join(" | ")}{" "}
             </Center>
-            <Button m="0" size="xs" onClick={() => setScoreAlert(true)}>
+            <Button
+              m="0"
+              size="xs"
+              onClick={() => {
+                if (gameOver || currentPlayer === role) setScoreAlert(true);
+              }}
+            >
               Reset score
             </Button>
             <Center fontSize="xl" ml={`${500 / 27}%`}>
-              Player: {currentPlayer}
+              Playing as: {role} |
+              {currentPlayer === role ? ` It's you!` : " Wait..."}
             </Center>
-            <Button size="xs" onClick={() => onOpenModal()}>
-              Restart match
+            <Button
+              size="xs"
+              onClick={() => {
+                if (gameOver || currentPlayer === role) openModal();
+              }}
+            >
+              New match
             </Button>
           </Grid>
         </Flex>
@@ -163,14 +122,47 @@ export const Game = (props: ChakraProps) => {
           {[...Array(9)].map((_, i) => (
             <TicTile
               id={i + 1}
+              role={role}
               currentPlayer={currentPlayer}
-              checkResult={checkResult}
+              playedBy={tiles[(i + 1) as keyof Tiles]}
               gameOver={gameOver}
-              resetTics={resetTics}
+              socket={socket}
             />
           ))}
         </Grid>
       </Grid>
+
+      <AlertDialog
+        isOpen={resetRequest}
+        leastDestructiveRef={cancelRef}
+        onClose={() => {}}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Your opponent wants to reset the score.
+            </AlertDialogHeader>
+
+            <AlertDialogBody>Do you confirm?</AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button
+                ref={cancelRef}
+                onClick={() => socket.send("reset-cancel")}
+              >
+                Cancel
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={() => socket.send("reset-confirm")}
+                ml={3}
+              >
+                Reset
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
 
       <AlertDialog
         isOpen={scoreAlert}
@@ -184,8 +176,8 @@ export const Game = (props: ChakraProps) => {
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              This will reset the score and restart the match. Are you sure you
-              want to continue?
+              This will reset the score and restart the match. Your opponent
+              needs to agree. Are you sure you want to continue?
             </AlertDialogBody>
 
             <AlertDialogFooter>
@@ -195,8 +187,7 @@ export const Game = (props: ChakraProps) => {
               <Button
                 colorScheme="red"
                 onClick={() => {
-                  setScore({ O: 0, X: 0, D: 0 });
-                  resetGame();
+                  socket.send("reset-start");
                   setScoreAlert(false);
                 }}
                 ml={3}
@@ -210,7 +201,7 @@ export const Game = (props: ChakraProps) => {
 
       <Modal
         closeOnOverlayClick={false}
-        onClose={onCloseModal}
+        onClose={closeModal}
         isOpen={isOpenModal}
         isCentered
       >
@@ -220,24 +211,24 @@ export const Game = (props: ChakraProps) => {
           <ModalCloseButton />
           <ModalBody>
             {!gameOver
-              ? "The game is not finished! If you restart the match, it will count as a draw. Start new game?"
+              ? "The game is not finished! If you start a new match, it will count as a defeat. Start new game?"
               : result === "D"
               ? `It's a Draw! Start new game?`
               : `Player ${result} won! Start new game?`}
           </ModalBody>
           <ModalFooter>
+            <Button variant="ghost" onClick={closeModal}>
+              Close
+            </Button>
             <Button
               colorScheme="red"
               mr={3}
               onClick={() => {
-                onCloseModal();
-                gameOver ? resetGame() : setUserTriggeredRestart(true);
+                gameOver ? socket.send("new-game") : socket.send("surrender");
+                closeModal();
               }}
             >
               New game
-            </Button>
-            <Button variant="ghost" onClick={onCloseModal}>
-              Close
             </Button>
           </ModalFooter>
         </ModalContent>
