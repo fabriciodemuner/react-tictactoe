@@ -1,6 +1,7 @@
 import { ChakraProvider, theme } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { io } from "socket.io-client";
+import { SpectatorView } from "./components/spectator/SpectatorView";
 import { HOST } from "./config/default";
 import { Game, Result, Tiles } from "./Game";
 import { Player } from "./TicTile";
@@ -11,7 +12,12 @@ export type Score = {
   X: number;
   D: number;
 };
-type GameData = { tiles: Tiles; currentPlayer: Player; role: Player };
+export type Role = Player | "S";
+type GameData = {
+  tiles: Tiles;
+  currentPlayer: Player;
+  role: Role;
+};
 type GameState = {
   score: Score;
   players: { O: string; X: string };
@@ -47,7 +53,7 @@ export const App = () => {
     9: undefined,
   });
   const [currentPlayer, setCurrentPlayer] = useState<Player>();
-  const [role, setRole] = useState<Player>();
+  const [role, setRole] = useState<Role>();
   const [gameOver, setGameOver] = useState(false);
   const [result, setResult] = useState<Result>();
   const [score, setScore] = useState<Score>({ O: 0, X: 0, D: 0 });
@@ -102,21 +108,25 @@ export const App = () => {
 
   return (
     <ChakraProvider theme={theme}>
-      <Game
-        socket={socket}
-        tiles={tiles}
-        role={role}
-        currentPlayer={currentPlayer}
-        gameOver={gameOver}
-        freeze={freeze}
-        result={result}
-        score={score}
-        resetRequest={resetRequest}
-        opponentSurrender={opponentSurrender}
-        textAlign="center"
-        maxWidth="900px"
-        mx="auto"
-      />
+      {role === "S" ? (
+        <SpectatorView tiles={tiles} score={score} />
+      ) : (
+        <Game
+          socket={socket}
+          tiles={tiles}
+          role={role}
+          currentPlayer={currentPlayer}
+          gameOver={gameOver}
+          freeze={freeze}
+          result={result}
+          score={score}
+          resetRequest={resetRequest}
+          opponentSurrender={opponentSurrender}
+          textAlign="center"
+          maxWidth="900px"
+          mx="auto"
+        />
+      )}
     </ChakraProvider>
   );
 };
