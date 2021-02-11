@@ -62,16 +62,6 @@ export const App = () => {
   };
 
   socket.on("connect", () => {
-    socket.send("hi");
-
-    socket.on("message", (message: string) => {
-      console.log(message);
-    });
-
-    socket.on("new-user", (message: string) => {
-      console.log(message);
-    });
-
     socket.on("setup", async (data: GameData) => {
       console.log("Setting up:", data);
       await setupGame(data);
@@ -104,9 +94,6 @@ export const App = () => {
     socket.on("reset-cancel", () => {
       setResetRequest(false);
       setFreeze(false);
-    });
-    socket.on("user-disconnected", (message: string) => {
-      console.log(message);
     });
   });
 
