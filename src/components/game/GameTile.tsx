@@ -1,10 +1,9 @@
 import { Center } from "@chakra-ui/react";
 import React from "react";
 import { Socket } from "socket.io-client";
+import { Player } from "../../common/types";
 
-export type Player = "O" | "X";
-
-interface TicTileProps {
+interface GameTileProps {
   id: number;
   currentPlayer: Player;
   role: Player;
@@ -14,7 +13,7 @@ interface TicTileProps {
   socket: Socket;
 }
 
-export const TicTile = (props: TicTileProps) => {
+export const GameTile = (props: GameTileProps) => {
   const {
     id,
     currentPlayer: player,

@@ -22,22 +22,9 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
-import { Score } from "./App";
-import { ColorModeSwitcher } from "./ColorModeSwitcher";
-import { Player, TicTile } from "./TicTile";
-
-export type Result = Player | "D";
-export type Tiles = {
-  1: Player | undefined;
-  2: Player | undefined;
-  3: Player | undefined;
-  4: Player | undefined;
-  5: Player | undefined;
-  6: Player | undefined;
-  7: Player | undefined;
-  8: Player | undefined;
-  9: Player | undefined;
-};
+import { Player, Result, Score, Tiles } from "../../common/types";
+import { ColorModeSwitcher } from "../ColorModeSwitcher";
+import { GameTile } from "./GameTile";
 
 type GameProps = {
   socket: Socket;
@@ -126,7 +113,7 @@ export const Game = (props: GameProps) => {
           gap="1"
         >
           {[...Array(9)].map((_, i) => (
-            <TicTile
+            <GameTile
               id={i + 1}
               role={role}
               currentPlayer={currentPlayer}
