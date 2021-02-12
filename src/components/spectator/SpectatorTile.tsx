@@ -1,6 +1,6 @@
 import { Center } from "@chakra-ui/react";
 import React from "react";
-import { Player } from "../../TicTile";
+import { Player } from "../../common/types";
 
 interface SpectatorTileProps {
   playedBy: Player | undefined;

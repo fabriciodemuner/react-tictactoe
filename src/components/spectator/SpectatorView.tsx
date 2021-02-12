@@ -13,9 +13,8 @@ import {
   Grid,
 } from "@chakra-ui/react";
 import React, { useRef, useState } from "react";
-import { Score } from "../../App";
-import { ColorModeSwitcher } from "../../ColorModeSwitcher";
-import { Tiles } from "../../Game";
+import { Tiles, Score } from "../../common/types";
+import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import { SpectatorTile } from "./SpectatorTile";
 
 type SpectatorViewProps = {

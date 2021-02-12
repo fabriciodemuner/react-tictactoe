@@ -1,8 +1,7 @@
 import { Center } from "@chakra-ui/react";
 import React from "react";
 import { Socket } from "socket.io-client";
-
-export type Player = "O" | "X";
+import { Player } from "../../common/types";
 
 interface TicTileProps {
   id: number;
