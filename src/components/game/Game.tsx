@@ -24,7 +24,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import { Player, Result, Score, Tiles } from "../../common/types";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
-import { TicTile } from "./TicTile";
+import { GameTile } from "./GameTile";
 
 type GameProps = {
   socket: Socket;
@@ -113,7 +113,7 @@ export const Game = (props: GameProps) => {
           gap="1"
         >
           {[...Array(9)].map((_, i) => (
-            <TicTile
+            <GameTile
               id={i + 1}
               role={role}
               currentPlayer={currentPlayer}

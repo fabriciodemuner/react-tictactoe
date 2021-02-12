@@ -3,7 +3,7 @@ import React from "react";
 import { Socket } from "socket.io-client";
 import { Player } from "../../common/types";
 
-interface TicTileProps {
+interface GameTileProps {
   id: number;
   currentPlayer: Player;
   role: Player;
@@ -13,7 +13,7 @@ interface TicTileProps {
   socket: Socket;
 }
 
-export const TicTile = (props: TicTileProps) => {
+export const GameTile = (props: GameTileProps) => {
   const {
     id,
     currentPlayer: player,
