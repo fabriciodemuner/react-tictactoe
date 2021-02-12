@@ -85,7 +85,13 @@ export const App = () => {
   return (
     <ChakraProvider theme={theme}>
       {role === "S" ? (
-        <SpectatorView tiles={tiles} score={score} />
+        <SpectatorView
+          tiles={tiles}
+          score={score}
+          textAlign="center"
+          maxWidth="900px"
+          mx="auto"
+        />
       ) : (
         <Game
           socket={socket}
