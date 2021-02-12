@@ -112,7 +112,7 @@ export const Game = (props: GameProps) => {
             <Button
               size="xs"
               onClick={() => {
-                if (!freeze && (gameOver || currentPlayer) === role)
+                if (!freeze && (gameOver || currentPlayer === role))
                   openModal();
               }}
             >
