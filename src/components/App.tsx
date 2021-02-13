@@ -33,7 +33,8 @@ export const App = () => {
   const [gameOver, setGameOver] = useState(false);
   const [result, setResult] = useState<Result>();
   const [score, setScore] = useState<Score>({ O: 0, X: 0, D: 0 });
-  const [resetRequest, setResetRequest] = useState(false);
+  const [resetScoreRequest, setResetScoreRequest] = useState(false);
+  const [resetScoreAlert, setResetScoreAlert] = useState(false);
   const [opponentSurrender, setOpponentSurrender] = useState(false);
   const [freeze, setFreeze] = useState(false);
 
@@ -57,12 +58,13 @@ export const App = () => {
       setFreeze(data.freeze);
       setResult(data.result);
       setScore(data.score);
-      setResetRequest(data.resetRequest);
+      setResetScoreRequest(data.resetRequest);
       setOpponentSurrender(data.opponentSurrender);
     });
 
     socket.on("freeze", () => {
       setFreeze(true);
+      setResetScoreAlert(false);
     });
 
     socket.on("opp-surrender", () => {
@@ -70,11 +72,15 @@ export const App = () => {
       setOpponentSurrender(true);
     });
 
+    socket.on("reset-alert", () => {
+      setResetScoreAlert(true);
+    });
     socket.on("reset-start", () => {
-      setResetRequest(true);
+      setResetScoreRequest(true);
     });
     socket.on("reset-cancel", () => {
-      setResetRequest(false);
+      setResetScoreAlert(false);
+      setResetScoreRequest(false);
       setFreeze(false);
     });
   });
@@ -102,8 +108,9 @@ export const App = () => {
           freeze={freeze}
           result={result}
           score={score}
-          resetRequest={resetRequest}
+          resetRequest={resetScoreRequest}
           opponentSurrender={opponentSurrender}
+          resetScoreAlert={resetScoreAlert}
           textAlign="center"
           maxWidth="900px"
           mx="auto"

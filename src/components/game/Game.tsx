@@ -1,29 +1,20 @@
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
   Box,
   Button,
   Center,
   ChakraProps,
   Flex,
   Grid,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { Player, Result, Score, Tiles } from "../../common/types";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
+import { GameOverModal } from "../spectator/alerts/GameOverModal";
+import { NewGameAlert } from "../spectator/alerts/NewGameAlert";
+import { ResetScoreAlert } from "../spectator/alerts/ResetScoreAlert";
+import { SurrenderAlert } from "../spectator/alerts/SurrenderAlert";
 import { GameTile } from "./GameTile";
 
 type GameProps = {
@@ -37,6 +28,7 @@ type GameProps = {
   resetRequest: boolean;
   freeze: boolean;
   opponentSurrender: boolean;
+  resetScoreAlert: boolean;
 } & ChakraProps;
 
 export const Game = (props: GameProps) => {
@@ -51,14 +43,14 @@ export const Game = (props: GameProps) => {
     resetRequest,
     freeze,
     opponentSurrender,
+    resetScoreAlert,
   } = props;
+
   const {
     isOpen: isOpenModal,
     onOpen: openModal,
     onClose: closeModal,
   } = useDisclosure();
-  const [scoreAlert, setScoreAlert] = useState(false);
-  const cancelRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     if (gameOver) {
@@ -86,8 +78,8 @@ export const Game = (props: GameProps) => {
               m="0"
               size="xs"
               onClick={() => {
-                if (!freeze && (gameOver || currentPlayer) === role)
-                  setScoreAlert(true);
+                if (!freeze && (gameOver || currentPlayer === role))
+                  socket.send("reset-alert");
               }}
             >
               Reset score
@@ -126,134 +118,16 @@ export const Game = (props: GameProps) => {
         </Grid>
       </Grid>
 
-      <AlertDialog
-        isOpen={resetRequest}
-        leastDestructiveRef={cancelRef}
-        onClose={() => {}}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Your opponent wants to reset the score.
-            </AlertDialogHeader>
-
-            <AlertDialogBody>Do you confirm?</AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button
-                ref={cancelRef}
-                onClick={() => socket.send("reset-cancel")}
-              >
-                Cancel
-              </Button>
-              <Button
-                colorScheme="red"
-                onClick={() => socket.send("reset-confirm")}
-                ml={3}
-              >
-                Reset
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
-
-      <AlertDialog
-        isOpen={opponentSurrender}
-        leastDestructiveRef={cancelRef}
-        onClose={() => {}}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Gave Over.
-            </AlertDialogHeader>
-
-            <AlertDialogBody>
-              Your opponent gave up and you won. A new match will start.
-            </AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button
-                ref={cancelRef}
-                onClick={() => socket.send("surrender-ok")}
-              >
-                Ok.
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
-
-      <AlertDialog
-        isOpen={scoreAlert}
-        leastDestructiveRef={cancelRef}
-        onClose={() => setScoreAlert(false)}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Reset score
-            </AlertDialogHeader>
-
-            <AlertDialogBody>
-              This will reset the score and restart the match. Your opponent
-              needs to agree. Are you sure you want to continue?
-            </AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={() => setScoreAlert(false)}>
-                Cancel
-              </Button>
-              <Button
-                colorScheme="red"
-                onClick={() => {
-                  socket.send("reset-start");
-                  setScoreAlert(false);
-                }}
-                ml={3}
-              >
-                Yes, reset
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
-
-      <Modal
-        closeOnOverlayClick={false}
-        onClose={closeModal}
-        isOpen={isOpenModal}
-        isCentered
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>{gameOver ? "Game Over!" : "Reset"}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {!gameOver
-              ? "The game is not finished! If you start a new match, it will count as a defeat. Start new game?"
-              : result === "D"
-              ? `It's a Draw! Start new game?`
-              : `Player ${result} won! Start new game?`}
-          </ModalBody>
-          <ModalFooter>
-            <Button variant="ghost" onClick={closeModal}>
-              Close
-            </Button>
-            <Button
-              colorScheme="red"
-              mr={3}
-              onClick={() => {
-                gameOver ? socket.send("new-game") : socket.send("surrender");
-                closeModal();
-              }}
-            >
-              New game
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <NewGameAlert socket={socket} resetRequest={resetRequest} />
+      <SurrenderAlert socket={socket} opponentSurrender={opponentSurrender} />
+      <ResetScoreAlert socket={socket} resetScoreAlert={resetScoreAlert} />
+      <GameOverModal
+        socket={socket}
+        gameOver={gameOver}
+        result={result}
+        isOpenModal={isOpenModal}
+        closeModal={closeModal}
+      />
     </Box>
   );
 };
