@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { Socket } from "socket.io-client";
-import { Result } from "../../../common/types";
+import { Result } from "../../types";
 
 interface GameOverModalProps {
   socket: Socket;

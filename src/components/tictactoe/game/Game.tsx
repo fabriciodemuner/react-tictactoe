@@ -9,8 +9,8 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
-import { Player, Result, Score, Tiles } from "../../common/types";
-import { ColorModeSwitcher } from "../ColorModeSwitcher";
+import { ColorModeSwitcher } from "../../ColorModeSwitcher";
+import { Player, Result, Score, Tiles } from "../types";
 import { GameOverModal } from "./alerts/GameOverModal";
 import { NewGameAlert } from "./alerts/NewGameAlert";
 import { ResetScoreAlert } from "./alerts/ResetScoreAlert";

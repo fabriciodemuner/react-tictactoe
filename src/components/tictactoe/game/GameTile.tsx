@@ -1,7 +1,7 @@
 import { Center } from "@chakra-ui/react";
 import React from "react";
 import { Socket } from "socket.io-client";
-import { Player } from "../../common/types";
+import { Player } from "../types";
 
 interface GameTileProps {
   id: number;

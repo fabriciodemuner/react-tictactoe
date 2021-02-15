@@ -13,8 +13,8 @@ import {
   Grid,
 } from "@chakra-ui/react";
 import React, { useRef, useState } from "react";
-import { Tiles, Score } from "../../common/types";
-import { ColorModeSwitcher } from "../ColorModeSwitcher";
+import { ColorModeSwitcher } from "../../ColorModeSwitcher";
+import { Score, Tiles } from "../types";
 import { SpectatorTile } from "./SpectatorTile";
 
 type SpectatorViewProps = {
