@@ -37,16 +37,16 @@ export const TicTacToe = () => {
   const [opponentSurrender, setOpponentSurrender] = useState(false);
   const [freeze, setFreeze] = useState(false);
 
-  const setupGame = async (data: GameData) => {
+  const setupGame = (data: GameData) => {
     setTiles(data.tiles);
     setCurrentPlayer(data.currentPlayer);
     setRole(data.role);
   };
 
   socket.on("connect", () => {
-    socket.on("setup", async (data: GameData) => {
+    socket.on("setup", (data: GameData) => {
       console.log("Setting up:", data);
-      await setupGame(data);
+      setupGame(data);
     });
 
     socket.on("game-state", (data: GameState) => {
