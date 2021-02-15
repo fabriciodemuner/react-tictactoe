@@ -11,10 +11,10 @@ import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { Player, Result, Score, Tiles } from "../../common/types";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
-import { GameOverModal } from "../spectator/alerts/GameOverModal";
-import { NewGameAlert } from "../spectator/alerts/NewGameAlert";
-import { ResetScoreAlert } from "../spectator/alerts/ResetScoreAlert";
-import { SurrenderAlert } from "../spectator/alerts/SurrenderAlert";
+import { GameOverModal } from "./alerts/GameOverModal";
+import { NewGameAlert } from "./alerts/NewGameAlert";
+import { ResetScoreAlert } from "./alerts/ResetScoreAlert";
+import { SurrenderAlert } from "./alerts/SurrenderAlert";
 import { GameTile } from "./GameTile";
 
 type GameProps = {
