@@ -21,6 +21,7 @@ export type GameData = {
   tiles: Tiles;
   currentPlayer: Player;
   role: Role;
+  waitingForOpponent: boolean;
 };
 export type GameState = {
   score: Score;
@@ -30,6 +31,7 @@ export type GameState = {
   freeze: boolean;
   resetRequest: boolean;
   opponentSurrender: boolean;
+  waitingForOpponent: boolean;
   result: Result;
   tiles: {
     1: Player;
