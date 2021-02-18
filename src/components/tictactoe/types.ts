@@ -33,15 +33,5 @@ export type GameState = {
   opponentSurrender: boolean;
   waitingForOpponent: boolean;
   result: Result;
-  tiles: {
-    1: Player;
-    2: Player;
-    3: Player;
-    4: Player;
-    5: Player;
-    6: Player;
-    7: Player;
-    8: Player;
-    9: Player;
-  };
+  tiles: Tiles;
 };
