@@ -1,6 +1,8 @@
+import { Box } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { io } from "socket.io-client";
 import { HOST } from "../../config/default";
+import { WaitingForOpponentAlert } from "./game/alerts/WaitingForOpponentAlert";
 import { Game } from "./game/Game";
 import { SpectatorView } from "./spectator/SpectatorView";
 import {
@@ -36,17 +38,24 @@ export const TicTacToe = () => {
   const [resetScoreAlert, setResetScoreAlert] = useState(false);
   const [opponentSurrender, setOpponentSurrender] = useState(false);
   const [freeze, setFreeze] = useState(false);
+  const [waitingForOpponent, setWaitingForOpponent] = useState(false);
 
   const setupGame = (data: GameData) => {
     setTiles(data.tiles);
     setCurrentPlayer(data.currentPlayer);
     setRole(data.role);
+    setWaitingForOpponent(data.waitingForOpponent);
   };
 
   socket.on("connect", () => {
     socket.on("setup", (data: GameData) => {
       console.log("Setting up:", data);
       setupGame(data);
+    });
+
+    socket.on("start-game", () => {
+      console.log("Starting new game:");
+      setWaitingForOpponent(false);
     });
 
     socket.on("game-state", (data: GameState) => {
@@ -59,6 +68,7 @@ export const TicTacToe = () => {
       setScore(data.score);
       setResetScoreRequest(data.resetRequest);
       setOpponentSurrender(data.opponentSurrender);
+      setWaitingForOpponent(data.waitingForOpponent);
     });
 
     socket.on("freeze", () => {
@@ -84,37 +94,38 @@ export const TicTacToe = () => {
     });
   });
 
-  if (!currentPlayer || !role)
-    return <div>Loading... (Most likely waiting for opponent)</div>;
+  if (waitingForOpponent)
+    return <WaitingForOpponentAlert waitingForOpponent={waitingForOpponent} />;
+
+  if (!currentPlayer || !role) return <Box>Loading...</Box>;
+
+  if (role === "S")
+    return (
+      <SpectatorView
+        tiles={tiles}
+        score={score}
+        textAlign="center"
+        maxWidth="900px"
+        mx="auto"
+      />
+    );
 
   return (
-    <div>
-      {role === "S" ? (
-        <SpectatorView
-          tiles={tiles}
-          score={score}
-          textAlign="center"
-          maxWidth="900px"
-          mx="auto"
-        />
-      ) : (
-        <Game
-          socket={socket}
-          tiles={tiles}
-          role={role}
-          currentPlayer={currentPlayer}
-          gameOver={gameOver}
-          freeze={freeze}
-          result={result}
-          score={score}
-          resetRequest={resetScoreRequest}
-          opponentSurrender={opponentSurrender}
-          resetScoreAlert={resetScoreAlert}
-          textAlign="center"
-          maxWidth="900px"
-          mx="auto"
-        />
-      )}
-    </div>
+    <Game
+      socket={socket}
+      tiles={tiles}
+      role={role}
+      currentPlayer={currentPlayer}
+      gameOver={gameOver}
+      freeze={freeze}
+      result={result}
+      score={score}
+      resetRequest={resetScoreRequest}
+      opponentSurrender={opponentSurrender}
+      resetScoreAlert={resetScoreAlert}
+      textAlign="center"
+      maxWidth="900px"
+      mx="auto"
+    />
   );
 };
