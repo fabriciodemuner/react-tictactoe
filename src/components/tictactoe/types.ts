@@ -17,11 +17,17 @@ export type Score = {
   D: number;
 };
 export type Role = Player | "S";
+export enum JoinOption {
+  Random = "random-room",
+  Create = "create-room",
+  Join = "join-room",
+}
 export type GameData = {
   tiles: Tiles;
   currentPlayer: Player;
   role: Role;
   waitingForOpponent: boolean;
+  joinOption: JoinOption;
 };
 export type GameState = {
   score: Score;

@@ -4,10 +4,12 @@ import { io } from "socket.io-client";
 import { HOST } from "../../config/default";
 import { WaitingForOpponentAlert } from "./game/alerts/WaitingForOpponentAlert";
 import { Game } from "./game/Game";
+import { SelectJoinOption } from "./SelectJoinOption";
 import { SpectatorView } from "./spectator/SpectatorView";
 import {
   GameData,
   GameState,
+  JoinOption,
   Player,
   Result,
   Role,
@@ -39,12 +41,14 @@ export const TicTacToe = () => {
   const [opponentSurrender, setOpponentSurrender] = useState(false);
   const [freeze, setFreeze] = useState(false);
   const [waitingForOpponent, setWaitingForOpponent] = useState(false);
+  const [joinOption, setJoinOption] = useState<JoinOption>();
 
   const setupGame = (data: GameData) => {
     setTiles(data.tiles);
     setCurrentPlayer(data.currentPlayer);
     setRole(data.role);
     setWaitingForOpponent(data.waitingForOpponent);
+    setJoinOption(data.joinOption);
   };
 
   socket.on("connect", () => {
@@ -93,6 +97,8 @@ export const TicTacToe = () => {
       setFreeze(false);
     });
   });
+
+  if (!joinOption) return <SelectJoinOption socket={socket} />;
 
   if (waitingForOpponent)
     return <WaitingForOpponentAlert waitingForOpponent={waitingForOpponent} />;
