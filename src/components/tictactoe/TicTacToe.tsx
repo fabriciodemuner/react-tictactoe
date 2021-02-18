@@ -99,34 +99,33 @@ export const TicTacToe = () => {
 
   if (!currentPlayer || !role) return <Box>Loading...</Box>;
 
+  if (role === "S")
+    return (
+      <SpectatorView
+        tiles={tiles}
+        score={score}
+        textAlign="center"
+        maxWidth="900px"
+        mx="auto"
+      />
+    );
+
   return (
-    <div>
-      {role === "S" ? (
-        <SpectatorView
-          tiles={tiles}
-          score={score}
-          textAlign="center"
-          maxWidth="900px"
-          mx="auto"
-        />
-      ) : (
-        <Game
-          socket={socket}
-          tiles={tiles}
-          role={role}
-          currentPlayer={currentPlayer}
-          gameOver={gameOver}
-          freeze={freeze}
-          result={result}
-          score={score}
-          resetRequest={resetScoreRequest}
-          opponentSurrender={opponentSurrender}
-          resetScoreAlert={resetScoreAlert}
-          textAlign="center"
-          maxWidth="900px"
-          mx="auto"
-        />
-      )}
-    </div>
+    <Game
+      socket={socket}
+      tiles={tiles}
+      role={role}
+      currentPlayer={currentPlayer}
+      gameOver={gameOver}
+      freeze={freeze}
+      result={result}
+      score={score}
+      resetRequest={resetScoreRequest}
+      opponentSurrender={opponentSurrender}
+      resetScoreAlert={resetScoreAlert}
+      textAlign="center"
+      maxWidth="900px"
+      mx="auto"
+    />
   );
 };
