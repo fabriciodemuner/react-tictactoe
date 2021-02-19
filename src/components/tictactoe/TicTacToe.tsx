@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import { HOST } from "../../config/default";
 import { WaitingForOpponentAlert } from "./game/alerts/WaitingForOpponentAlert";
 import { Game } from "./game/Game";
-import { SelectJoinOption } from "./SelectJoinOption";
+import { SelectJoinOption } from "./join-option/SelectJoinOption";
 import { SpectatorView } from "./spectator/SpectatorView";
 import {
   GameData,

@@ -18,9 +18,9 @@ export type Score = {
 };
 export type Role = Player | "S";
 export enum JoinOption {
-  Random = "random-room",
-  Create = "create-room",
-  Join = "join-room",
+  random = "random-room",
+  create = "create-room",
+  join = "join-room",
 }
 export type GameData = {
   tiles: Tiles;
