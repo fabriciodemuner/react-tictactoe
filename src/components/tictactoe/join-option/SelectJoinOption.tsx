@@ -2,15 +2,19 @@ import { Box, ChakraProps, Flex, Select, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Socket } from "socket.io-client";
 import { JoinOption } from "../types";
+import { NameTakenAlert } from "./alerts/NameTakenAlert";
+import { NotFoundAlert } from "./alerts/NotFoundAlert";
 import { NamedRoomInfo } from "./NamedRoomInfo";
 import { RandomRoomInfo } from "./RandomRoomInfo";
 
 type GameProps = {
   socket: Socket;
+  nameTaken: boolean;
+  notFound: boolean;
 } & ChakraProps;
 
 export const SelectJoinOption = (props: GameProps) => {
-  const { socket } = props;
+  const { socket, nameTaken, notFound } = props;
   const [option, setOption] = useState<JoinOption>();
 
   return (
@@ -31,6 +35,9 @@ export const SelectJoinOption = (props: GameProps) => {
           <NamedRoomInfo option={option} socket={socket} />
         )}
       </Box>
+
+      {nameTaken && <NameTakenAlert socket={socket} nameTaken={nameTaken} />}
+      {notFound && <NotFoundAlert socket={socket} notFound={notFound} />}
     </Flex>
   );
 };

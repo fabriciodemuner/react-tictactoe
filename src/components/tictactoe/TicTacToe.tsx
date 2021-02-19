@@ -42,6 +42,8 @@ export const TicTacToe = () => {
   const [freeze, setFreeze] = useState(false);
   const [waitingForOpponent, setWaitingForOpponent] = useState(false);
   const [joinOption, setJoinOption] = useState<JoinOption>();
+  const [nameTaken, setNameTaken] = useState(false);
+  const [notFound, setRoomNotFound] = useState(false);
 
   const setupGame = (data: GameData) => {
     setTiles(data.tiles);
@@ -96,9 +98,34 @@ export const TicTacToe = () => {
       setResetScoreRequest(false);
       setFreeze(false);
     });
+
+    socket.on("room-name-taken", () => {
+      console.log("room-name-taken");
+      setNameTaken(true);
+    });
+    socket.on("room-name-taken-ok", () => {
+      console.log("room-name-taken-ok");
+      setNameTaken(false);
+    });
+
+    socket.on("room-not-found", () => {
+      console.log("room-not-found");
+      setRoomNotFound(true);
+    });
+    socket.on("room-not-found-ok", () => {
+      console.log("room-not-found-ok");
+      setRoomNotFound(false);
+    });
   });
 
-  if (!joinOption) return <SelectJoinOption socket={socket} />;
+  if (!joinOption)
+    return (
+      <SelectJoinOption
+        socket={socket}
+        nameTaken={nameTaken}
+        notFound={notFound}
+      />
+    );
 
   if (waitingForOpponent)
     return <WaitingForOpponentAlert waitingForOpponent={waitingForOpponent} />;
