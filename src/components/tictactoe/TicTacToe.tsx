@@ -1,7 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { io } from "socket.io-client";
-import { HOST } from "../../config/default";
+import { Socket } from "socket.io-client";
 import { WaitingForOpponentAlert } from "./game/alerts/WaitingForOpponentAlert";
 import { Game } from "./game/Game";
 import { SelectJoinOption } from "./join-option/SelectJoinOption";
@@ -17,9 +16,13 @@ import {
   Tiles,
 } from "./types";
 
-const socket = io(HOST);
+type TicTacToeProps = {
+  socket: Socket;
+  userName: string;
+};
 
-export const TicTacToe = () => {
+export const TicTacToe = (props: TicTacToeProps) => {
+  const { socket, userName } = props;
   const [tiles, setTiles] = useState<Tiles>({
     1: undefined,
     2: undefined,
@@ -53,69 +56,67 @@ export const TicTacToe = () => {
     setJoinOption(data.joinOption);
   };
 
-  socket.on("connect", () => {
-    socket.on("setup", (data: GameData) => {
-      console.log("Setting up:", data);
-      setupGame(data);
-    });
+  socket.on("setup", (data: GameData) => {
+    console.log("Setting up:", data);
+    setupGame(data);
+  });
 
-    socket.on("start-game", () => {
-      console.log("Starting new game:");
-      setWaitingForOpponent(false);
-    });
+  socket.on("start-game", () => {
+    console.log("Starting new game:");
+    setWaitingForOpponent(false);
+  });
 
-    socket.on("game-state", (data: GameState) => {
-      console.log("GameState updated", data);
-      setTiles(data.tiles);
-      setCurrentPlayer(data.currentPlayer);
-      setGameOver(data.gameOver);
-      setFreeze(data.freeze);
-      setResult(data.result);
-      setScore(data.score);
-      setResetScoreRequest(data.resetRequest);
-      setOpponentSurrender(data.opponentSurrender);
-      setWaitingForOpponent(data.waitingForOpponent);
-    });
+  socket.on("game-state", (data: GameState) => {
+    console.log("GameState updated", data);
+    setTiles(data.tiles);
+    setCurrentPlayer(data.currentPlayer);
+    setGameOver(data.gameOver);
+    setFreeze(data.freeze);
+    setResult(data.result);
+    setScore(data.score);
+    setResetScoreRequest(data.resetRequest);
+    setOpponentSurrender(data.opponentSurrender);
+    setWaitingForOpponent(data.waitingForOpponent);
+  });
 
-    socket.on("freeze", () => {
-      setFreeze(true);
-      setResetScoreAlert(false);
-    });
+  socket.on("freeze", () => {
+    setFreeze(true);
+    setResetScoreAlert(false);
+  });
 
-    socket.on("opp-surrender", () => {
-      setFreeze(true);
-      setOpponentSurrender(true);
-    });
+  socket.on("opp-surrender", () => {
+    setFreeze(true);
+    setOpponentSurrender(true);
+  });
 
-    socket.on("reset-alert", () => {
-      setResetScoreAlert(true);
-    });
-    socket.on("reset-start", () => {
-      setResetScoreRequest(true);
-    });
-    socket.on("reset-cancel", () => {
-      setResetScoreAlert(false);
-      setResetScoreRequest(false);
-      setFreeze(false);
-    });
+  socket.on("reset-alert", () => {
+    setResetScoreAlert(true);
+  });
+  socket.on("reset-start", () => {
+    setResetScoreRequest(true);
+  });
+  socket.on("reset-cancel", () => {
+    setResetScoreAlert(false);
+    setResetScoreRequest(false);
+    setFreeze(false);
+  });
 
-    socket.on("room-name-taken", () => {
-      console.log("room-name-taken");
-      setNameTaken(true);
-    });
-    socket.on("room-name-taken-ok", () => {
-      console.log("room-name-taken-ok");
-      setNameTaken(false);
-    });
+  socket.on("room-name-taken", () => {
+    console.log("room-name-taken");
+    setNameTaken(true);
+  });
+  socket.on("room-name-taken-ok", () => {
+    console.log("room-name-taken-ok");
+    setNameTaken(false);
+  });
 
-    socket.on("room-not-found", () => {
-      console.log("room-not-found");
-      setRoomNotFound(true);
-    });
-    socket.on("room-not-found-ok", () => {
-      console.log("room-not-found-ok");
-      setRoomNotFound(false);
-    });
+  socket.on("room-not-found", () => {
+    console.log("room-not-found");
+    setRoomNotFound(true);
+  });
+  socket.on("room-not-found-ok", () => {
+    console.log("room-not-found-ok");
+    setRoomNotFound(false);
   });
 
   if (!joinOption)
