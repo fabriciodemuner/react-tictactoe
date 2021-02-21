@@ -10,11 +10,11 @@ type NamedRoomInfoProps = {
 
 export const NamedRoomInfo = (props: NamedRoomInfoProps) => {
   const { socket, option } = props;
-  const [name, setName] = useState("");
+  const [roomName, setRoomName] = useState("");
 
   const sendName = () => {
-    console.log("sending name", option, name);
-    if (option) socket.emit(option, name);
+    console.log("sending name", option, roomName);
+    if (option) socket.emit(option, roomName);
   };
 
   return (
@@ -25,8 +25,8 @@ export const NamedRoomInfo = (props: NamedRoomInfoProps) => {
       <Input
         mt={4}
         placeholder="room name"
-        value={name}
-        onChange={e => setName(e.target.value)}
+        value={roomName}
+        onChange={e => setRoomName(e.target.value)}
       />
       <Button onClick={sendName} display="block" mx="auto" mt={4}>
         {option.replace("-room", "")} room
