@@ -18,11 +18,10 @@ import {
 
 type TicTacToeProps = {
   socket: Socket;
-  userName: string;
 };
 
 export const TicTacToe = (props: TicTacToeProps) => {
-  const { socket, userName } = props;
+  const { socket } = props;
   const [tiles, setTiles] = useState<Tiles>({
     1: undefined,
     2: undefined,

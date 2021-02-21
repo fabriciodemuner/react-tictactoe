@@ -25,9 +25,7 @@ export const App = () => {
       {!game && (
         <Setup socket={socket} userName={userName} setUserName={setUserName} />
       )}
-      {game === Games.TicTacToe && (
-        <TicTacToe userName={userName} socket={socket} />
-      )}
+      {game === Games.TicTacToe && <TicTacToe socket={socket} />}
     </ChakraProvider>
   );
 };
