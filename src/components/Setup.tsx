@@ -1,7 +1,7 @@
-import { Text, Flex, Select, Input, Button } from "@chakra-ui/react";
+import { Button, Flex, Input, Select, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Socket } from "socket.io-client";
-import { Games } from "./App";
+import { games, Games } from "./App";
 
 type SetupProps = {
   socket: Socket;
@@ -27,8 +27,8 @@ export const Setup = (props: SetupProps) => {
         onChange={e => setGame(e.target.value as Games)}
         mt={4}
       >
-        {Object.entries(Games).map(op => (
-          <option value={op[0]}>{op[1]}</option>
+        {games.map(op => (
+          <option value={op}>{op}</option>
         ))}
       </Select>
       <Input

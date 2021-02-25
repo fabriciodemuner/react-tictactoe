@@ -1,13 +1,12 @@
 import { ChakraProvider, theme } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { Setup } from "./Setup";
-import { TicTacToe } from "./tictactoe/TicTacToe";
 import { io } from "socket.io-client";
 import { HOST } from "../config/default";
+import { Setup } from "./Setup";
+import { TicTacToe } from "./tictactoe/TicTacToe";
 
-export enum Games {
-  TicTacToe = "TicTacToe",
-}
+export const games = ["TicTacToe", "Draughts/Checkers"] as const;
+export type Games = typeof games[number];
 
 const socket = io(HOST);
 
@@ -25,7 +24,7 @@ export const App = () => {
       {!game && (
         <Setup socket={socket} userName={userName} setUserName={setUserName} />
       )}
-      {game === Games.TicTacToe && <TicTacToe socket={socket} />}
+      {game === "TicTacToe" && <TicTacToe socket={socket} />}
     </ChakraProvider>
   );
 };
