@@ -10,17 +10,17 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { Socket } from "socket.io-client";
-import { Result } from "../../types";
+import { TTTResult } from "../../types";
 
-interface GameOverModalProps {
+interface TTTGameOverModalProps {
   socket: Socket;
   gameOver: boolean;
-  result: Result | undefined;
+  result: TTTResult;
   isOpenModal: boolean;
   closeModal: () => void;
 }
 
-export const GameOverModal = (props: GameOverModalProps) => {
+export const TTTGameOverModal = (props: TTTGameOverModalProps) => {
   const { socket, gameOver, result, isOpenModal, closeModal } = props;
 
   return (

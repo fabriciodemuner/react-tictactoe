@@ -1,12 +1,12 @@
 import { Center } from "@chakra-ui/react";
 import React from "react";
-import { Player } from "../types";
+import { TTTPlayer } from "../types";
 
-interface SpectatorTileProps {
-  playedBy: Player | undefined;
+interface TTTSpectatorTileProps {
+  playedBy: TTTPlayer | undefined;
 }
 
-export const SpectatorTile = (props: SpectatorTileProps) => {
+export const TTTSpectatorTile = (props: TTTSpectatorTileProps) => {
   const { playedBy } = props;
   const color = !playedBy
     ? undefined

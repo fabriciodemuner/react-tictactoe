@@ -14,15 +14,15 @@ import {
 } from "@chakra-ui/react";
 import React, { useRef, useState } from "react";
 import { ColorModeSwitcher } from "../../ColorModeSwitcher";
-import { Score, Tiles } from "../types";
-import { SpectatorTile } from "./SpectatorTile";
+import { TTTScore, TTTTiles } from "../types";
+import { TTTSpectatorTile } from "./SpectatorTile";
 
-type SpectatorViewProps = {
-  tiles: Tiles;
-  score: Score;
+type TTTSpectatorViewProps = {
+  tiles: TTTTiles;
+  score: TTTScore;
 } & ChakraProps;
 
-export const SpectatorView = (props: SpectatorViewProps) => {
+export const TTTSpectatorView = (props: TTTSpectatorViewProps) => {
   const { tiles, score } = props;
   const [alert, setAlert] = useState(true);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
@@ -47,7 +47,7 @@ export const SpectatorView = (props: SpectatorViewProps) => {
           gap="1"
         >
           {[...Array(9)].map((_, i) => (
-            <SpectatorTile playedBy={tiles[(i + 1) as keyof Tiles]} />
+            <TTTSpectatorTile playedBy={tiles[(i + 1) as keyof TTTTiles]} />
           ))}
         </Grid>
 

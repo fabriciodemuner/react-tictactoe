@@ -1,21 +1,21 @@
 import {
   AlertDialog,
-  AlertDialogOverlay,
-  AlertDialogContent,
-  AlertDialogHeader,
   AlertDialogBody,
+  AlertDialogContent,
   AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Button,
 } from "@chakra-ui/react";
 import React, { useRef } from "react";
 import { Socket } from "socket.io-client";
 
-interface SurrenderAlertProps {
+interface TTTSurrenderAlertProps {
   socket: Socket;
   opponentSurrender: boolean;
 }
 
-export const SurrenderAlert = (props: SurrenderAlertProps) => {
+export const TTTSurrenderAlert = (props: TTTSurrenderAlertProps) => {
   const { socket, opponentSurrender } = props;
   const cancelRef = useRef<HTMLButtonElement | null>(null);
 

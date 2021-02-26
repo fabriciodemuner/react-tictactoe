@@ -1,7 +1,7 @@
 import { Box, Button, ChakraProps, Input, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Socket } from "socket.io-client";
-import { JoinOption } from "../types";
+import { JoinOption } from "./SelectJoinOption";
 
 type NamedRoomInfoProps = {
   socket: Socket;

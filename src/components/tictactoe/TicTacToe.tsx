@@ -1,19 +1,21 @@
 import { Box } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Socket } from "socket.io-client";
-import { WaitingForOpponentAlert } from "./game/alerts/WaitingForOpponentAlert";
-import { Game } from "./game/Game";
-import { SelectJoinOption } from "./join-option/SelectJoinOption";
-import { SpectatorView } from "./spectator/SpectatorView";
 import {
-  GameData,
-  GameState,
   JoinOption,
-  Player,
-  Result,
-  Role,
-  Score,
-  Tiles,
+  SelectJoinOption,
+} from "../common/join-option/SelectJoinOption";
+import { WaitingForOpponentAlert } from "./game/alerts/WaitingForOpponentAlert";
+import { TicTacToeGame } from "./game/Game";
+import { TTTSpectatorView } from "./spectator/SpectatorView";
+import {
+  TTTGameData,
+  TTTGameState,
+  TTTPlayer,
+  TTTResult,
+  TTTRole,
+  TTTScore,
+  TTTTiles,
 } from "./types";
 
 type TicTacToeProps = {
@@ -22,7 +24,7 @@ type TicTacToeProps = {
 
 export const TicTacToe = (props: TicTacToeProps) => {
   const { socket } = props;
-  const [tiles, setTiles] = useState<Tiles>({
+  const [tiles, setTiles] = useState<TTTTiles>({
     1: undefined,
     2: undefined,
     3: undefined,
@@ -33,11 +35,15 @@ export const TicTacToe = (props: TicTacToeProps) => {
     8: undefined,
     9: undefined,
   });
-  const [currentPlayer, setCurrentPlayer] = useState<Player>();
-  const [role, setRole] = useState<Role>();
+  const [currentPlayer, setCurrentPlayer] = useState<TTTPlayer>();
+  const [role, setRole] = useState<TTTRole>();
   const [gameOver, setGameOver] = useState(false);
-  const [result, setResult] = useState<Result>();
-  const [score, setScore] = useState<Score>({ O: 0, X: 0, D: 0 });
+  const [result, setResult] = useState<TTTResult>();
+  const [score, setScore] = useState<TTTScore>({
+    O: 0,
+    X: 0,
+    D: 0,
+  });
   const [resetScoreRequest, setResetScoreRequest] = useState(false);
   const [resetScoreAlert, setResetScoreAlert] = useState(false);
   const [opponentSurrender, setOpponentSurrender] = useState(false);
@@ -47,7 +53,7 @@ export const TicTacToe = (props: TicTacToeProps) => {
   const [nameTaken, setNameTaken] = useState(false);
   const [notFound, setRoomNotFound] = useState(false);
 
-  const setupGame = (data: GameData) => {
+  const setupGame = (data: TTTGameData) => {
     setTiles(data.tiles);
     setCurrentPlayer(data.currentPlayer);
     setRole(data.role);
@@ -55,7 +61,7 @@ export const TicTacToe = (props: TicTacToeProps) => {
     setJoinOption(data.joinOption);
   };
 
-  socket.on("setup", (data: GameData) => {
+  socket.on("setup", (data: TTTGameData) => {
     console.log("Setting up:", data);
     setupGame(data);
   });
@@ -65,7 +71,7 @@ export const TicTacToe = (props: TicTacToeProps) => {
     setWaitingForOpponent(false);
   });
 
-  socket.on("game-state", (data: GameState) => {
+  socket.on("game-state", (data: TTTGameState) => {
     console.log("GameState updated", data);
     setTiles(data.tiles);
     setCurrentPlayer(data.currentPlayer);
@@ -134,7 +140,7 @@ export const TicTacToe = (props: TicTacToeProps) => {
 
   if (role === "S")
     return (
-      <SpectatorView
+      <TTTSpectatorView
         tiles={tiles}
         score={score}
         textAlign="center"
@@ -144,7 +150,7 @@ export const TicTacToe = (props: TicTacToeProps) => {
     );
 
   return (
-    <Game
+    <TicTacToeGame
       socket={socket}
       tiles={tiles}
       role={role}

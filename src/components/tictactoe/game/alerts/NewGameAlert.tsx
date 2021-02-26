@@ -1,21 +1,21 @@
 import {
   AlertDialog,
-  AlertDialogOverlay,
-  AlertDialogContent,
-  AlertDialogHeader,
   AlertDialogBody,
+  AlertDialogContent,
   AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Button,
 } from "@chakra-ui/react";
 import React, { useRef } from "react";
 import { Socket } from "socket.io-client";
 
-interface NewGameAlertProps {
+interface TTTNewGameAlertProps {
   socket: Socket;
   resetRequest: boolean;
 }
 
-export const NewGameAlert = (props: NewGameAlertProps) => {
+export const TTTNewGameAlert = (props: TTTNewGameAlertProps) => {
   const { socket, resetRequest } = props;
   const cancelRef = useRef<HTMLButtonElement | null>(null);
 

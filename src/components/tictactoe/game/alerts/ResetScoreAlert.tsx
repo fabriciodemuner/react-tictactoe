@@ -10,12 +10,12 @@ import {
 import React, { useRef } from "react";
 import { Socket } from "socket.io-client";
 
-interface ResetScoreAlertProps {
+interface TTTResetScoreAlertProps {
   socket: Socket;
   resetScoreAlert: boolean;
 }
 
-export const ResetScoreAlert = (props: ResetScoreAlertProps) => {
+export const TTTResetScoreAlert = (props: TTTResetScoreAlertProps) => {
   const { socket, resetScoreAlert } = props;
   const cancelRef = useRef<HTMLButtonElement | null>(null);
 

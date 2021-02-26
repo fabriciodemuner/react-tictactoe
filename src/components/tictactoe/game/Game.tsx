@@ -10,28 +10,28 @@ import {
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { ColorModeSwitcher } from "../../ColorModeSwitcher";
-import { Player, Result, Score, Tiles } from "../types";
-import { GameOverModal } from "./alerts/GameOverModal";
-import { NewGameAlert } from "./alerts/NewGameAlert";
-import { ResetScoreAlert } from "./alerts/ResetScoreAlert";
-import { SurrenderAlert } from "./alerts/SurrenderAlert";
-import { GameTile } from "./GameTile";
+import { TTTPlayer, TTTResult, TTTScore, TTTTiles } from "../types";
+import { TTTGameOverModal } from "./alerts/GameOverModal";
+import { TTTNewGameAlert } from "./alerts/NewGameAlert";
+import { TTTResetScoreAlert } from "./alerts/ResetScoreAlert";
+import { TTTSurrenderAlert } from "./alerts/SurrenderAlert";
+import { TTTGameTile } from "./GameTile";
 
-type GameProps = {
+type TicTacToeGameProps = {
   socket: Socket;
-  tiles: Tiles;
-  role: Player;
-  currentPlayer: Player;
+  tiles: TTTTiles;
+  role: TTTPlayer;
+  currentPlayer: TTTPlayer;
   gameOver: boolean;
-  result: Result | undefined;
-  score: Score;
+  result: TTTResult;
+  score: TTTScore;
   resetRequest: boolean;
   freeze: boolean;
   opponentSurrender: boolean;
   resetScoreAlert: boolean;
 } & ChakraProps;
 
-export const Game = (props: GameProps) => {
+export const TicTacToeGame = (props: TicTacToeGameProps) => {
   const {
     socket,
     tiles,
@@ -105,11 +105,11 @@ export const Game = (props: GameProps) => {
           gap="1"
         >
           {[...Array(9)].map((_, i) => (
-            <GameTile
+            <TTTGameTile
               id={i + 1}
               role={role}
               currentPlayer={currentPlayer}
-              playedBy={tiles[(i + 1) as keyof Tiles]}
+              playedBy={tiles[(i + 1) as keyof TTTTiles]}
               gameOver={gameOver}
               freeze={freeze}
               socket={socket}
@@ -118,10 +118,13 @@ export const Game = (props: GameProps) => {
         </Grid>
       </Grid>
 
-      <NewGameAlert socket={socket} resetRequest={resetRequest} />
-      <SurrenderAlert socket={socket} opponentSurrender={opponentSurrender} />
-      <ResetScoreAlert socket={socket} resetScoreAlert={resetScoreAlert} />
-      <GameOverModal
+      <TTTNewGameAlert socket={socket} resetRequest={resetRequest} />
+      <TTTSurrenderAlert
+        socket={socket}
+        opponentSurrender={opponentSurrender}
+      />
+      <TTTResetScoreAlert socket={socket} resetScoreAlert={resetScoreAlert} />
+      <TTTGameOverModal
         socket={socket}
         gameOver={gameOver}
         result={result}
