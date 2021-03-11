@@ -1,5 +1,5 @@
 import { Button, Flex, Input, Select, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Socket } from "socket.io-client";
 import { games, Games } from "./App";
 

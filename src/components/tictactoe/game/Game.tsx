@@ -7,10 +7,16 @@ import {
   Grid,
   useDisclosure,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { ColorModeSwitcher } from "../../ColorModeSwitcher";
-import { TTTPlayer, TTTResult, TTTScore, TTTTiles } from "../types";
+import {
+  TTTNumOfTiles,
+  TTTPlayer,
+  TTTResult,
+  TTTScore,
+  TTTTiles,
+} from "../types";
 import { TTTGameOverModal } from "./alerts/GameOverModal";
 import { TTTNewGameAlert } from "./alerts/NewGameAlert";
 import { TTTResetScoreAlert } from "./alerts/ResetScoreAlert";
@@ -25,7 +31,7 @@ type TicTacToeGameProps = {
   gameOver: boolean;
   result: TTTResult;
   score: TTTScore;
-  resetRequest: boolean;
+  resetRequested: boolean;
   freeze: boolean;
   opponentSurrender: boolean;
   resetScoreAlert: boolean;
@@ -40,7 +46,7 @@ export const TicTacToeGame = (props: TicTacToeGameProps) => {
     gameOver,
     result,
     score,
-    resetRequest,
+    resetRequested,
     freeze,
     opponentSurrender,
     resetScoreAlert,
@@ -104,7 +110,7 @@ export const TicTacToeGame = (props: TicTacToeGameProps) => {
           templateColumns="repeat(3, 1fr)"
           gap="1"
         >
-          {[...Array(9)].map((_, i) => (
+          {[...Array(TTTNumOfTiles)].map((_, i) => (
             <TTTGameTile
               id={i + 1}
               role={role}
@@ -118,7 +124,7 @@ export const TicTacToeGame = (props: TicTacToeGameProps) => {
         </Grid>
       </Grid>
 
-      <TTTNewGameAlert socket={socket} resetRequest={resetRequest} />
+      <TTTNewGameAlert socket={socket} resetRequest={resetRequested} />
       <TTTSurrenderAlert
         socket={socket}
         opponentSurrender={opponentSurrender}

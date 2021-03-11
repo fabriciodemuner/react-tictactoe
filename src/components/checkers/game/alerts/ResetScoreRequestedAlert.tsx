@@ -10,31 +10,30 @@ import {
 import { useRef } from "react";
 import { Socket } from "socket.io-client";
 
-interface TTTResetScoreAlertProps {
+interface CheckersResetScoreRequestedAlertProps {
   socket: Socket;
-  resetScoreAlert: boolean;
+  resetScoreRequested: boolean;
 }
 
-export const TTTResetScoreAlert = (props: TTTResetScoreAlertProps) => {
-  const { socket, resetScoreAlert } = props;
+export const CheckersResetScoreRequestedAlert = (
+  props: CheckersResetScoreRequestedAlertProps
+) => {
+  const { socket, resetScoreRequested } = props;
   const cancelRef = useRef<HTMLButtonElement | null>(null);
 
   return (
     <AlertDialog
-      isOpen={resetScoreAlert}
+      isOpen={resetScoreRequested}
       leastDestructiveRef={cancelRef}
       onClose={() => {}}
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            Reset score
+            Your opponent wants to reset the score.
           </AlertDialogHeader>
 
-          <AlertDialogBody>
-            This will reset the score and restart the match. Your opponent needs
-            to agree. Are you sure you want to continue?
-          </AlertDialogBody>
+          <AlertDialogBody>Do you confirm?</AlertDialogBody>
 
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={() => socket.send("reset-cancel")}>
@@ -42,12 +41,10 @@ export const TTTResetScoreAlert = (props: TTTResetScoreAlertProps) => {
             </Button>
             <Button
               colorScheme="red"
-              onClick={() => {
-                socket.send("reset-start");
-              }}
+              onClick={() => socket.send("reset-confirm")}
               ml={3}
             >
-              Yes, reset
+              Reset
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

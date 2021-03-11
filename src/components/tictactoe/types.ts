@@ -7,11 +7,11 @@ import {
   Tiles,
 } from "../common/types";
 
-type TTTNumOfTiles = 9;
-export type TTTGameData = GameData<TTTPlayer, TTTNumOfTiles>;
-export type TTTGameState = GameState<TTTPlayer, TTTNumOfTiles>;
+export const TTTNumOfTiles = 9;
+export type TTTGameData = GameData<TTTPlayer, typeof TTTNumOfTiles>;
+export type TTTGameState = GameState<TTTPlayer, typeof TTTNumOfTiles>;
 export type TTTPlayer = "O" | "X";
 export type TTTResult = Result<TTTPlayer> | undefined;
 export type TTTRole = Role<TTTPlayer>;
 export type TTTScore = Score<TTTPlayer>;
-export type TTTTiles = Tiles<TTTPlayer, TTTNumOfTiles>;
+export type TTTTiles = Tiles<TTTPlayer, typeof TTTNumOfTiles>;

@@ -14,15 +14,20 @@ import {
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { ColorModeSwitcher } from "../../ColorModeSwitcher";
-import { TTTScore, TTTTiles } from "../types";
-import { TTTSpectatorTile } from "./SpectatorTile";
+import {
+  CheckersRows,
+  CheckersScore,
+  CheckersTiles,
+  CheckersTilesPerRow,
+} from "../types";
+import { CheckersSpectatorTile } from "./SpectatorTile";
 
-type TTTSpectatorViewProps = {
-  tiles: TTTTiles;
-  score: TTTScore;
+type CheckersSpectatorViewProps = {
+  tiles: CheckersTiles;
+  score: CheckersScore;
 } & ChakraProps;
 
-export const TTTSpectatorView = (props: TTTSpectatorViewProps) => {
+export const CheckersSpectatorView = (props: CheckersSpectatorViewProps) => {
   const { tiles, score } = props;
   const [alert, setAlert] = useState(true);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
@@ -36,19 +41,27 @@ export const TTTSpectatorView = (props: TTTSpectatorViewProps) => {
             <Center fontSize="md">
               {Object.entries(score)
                 .map(el => `${el[0]}: ${el[1]}`)
-                .join(" | ")}{" "}
+                .join(" | ")}
             </Center>
             <Center fontSize="xl">Spectator</Center>
           </Flex>
         </Flex>
         <Grid
-          templateRows="repeat(3, 1fr)"
-          templateColumns="repeat(3, 1fr)"
+          templateRows={`repeat(${CheckersRows}, 1fr)`}
+          templateColumns={`repeat(${CheckersTilesPerRow}, 1fr)`}
           gap="1"
         >
-          {[...Array(9)].map((_, i) => (
-            <TTTSpectatorTile playedBy={tiles[(i + 1) as keyof TTTTiles]} />
-          ))}
+          {[...Array(CheckersRows)].map((_, row) =>
+            [...Array(CheckersTilesPerRow)].map((_, col) => (
+              <CheckersSpectatorTile
+                playedBy={
+                  tiles[
+                    (row * CheckersTilesPerRow + col + 1) as keyof CheckersTiles
+                  ]
+                }
+              />
+            ))
+          )}
         </Grid>
 
         <AlertDialog

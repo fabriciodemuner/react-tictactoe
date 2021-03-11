@@ -7,7 +7,7 @@ import {
   AlertDialogOverlay,
   Button,
 } from "@chakra-ui/react";
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { Socket } from "socket.io-client";
 
 interface TTTSurrenderAlertProps {

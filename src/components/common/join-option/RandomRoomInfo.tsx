@@ -1,5 +1,4 @@
 import { Box, Button, ChakraProps, Text } from "@chakra-ui/react";
-import React from "react";
 import { Socket } from "socket.io-client";
 import { JoinOption } from "./SelectJoinOption";
 

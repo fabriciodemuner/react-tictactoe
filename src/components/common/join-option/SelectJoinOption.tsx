@@ -1,5 +1,5 @@
 import { Box, ChakraProps, Flex, Select, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Socket } from "socket.io-client";
 import { NameTakenAlert } from "./alerts/NameTakenAlert";
 import { NotFoundAlert } from "./alerts/NotFoundAlert";

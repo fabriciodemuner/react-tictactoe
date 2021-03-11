@@ -10,44 +10,41 @@ import {
 import { useRef } from "react";
 import { Socket } from "socket.io-client";
 
-interface TTTResetScoreAlertProps {
+interface CheckersDrawRequestedAlertProps {
   socket: Socket;
-  resetScoreAlert: boolean;
+  drawRequested: boolean;
 }
 
-export const TTTResetScoreAlert = (props: TTTResetScoreAlertProps) => {
-  const { socket, resetScoreAlert } = props;
+export const CheckersDrawRequestedAlert = (
+  props: CheckersDrawRequestedAlertProps
+) => {
+  const { socket, drawRequested } = props;
   const cancelRef = useRef<HTMLButtonElement | null>(null);
 
   return (
     <AlertDialog
-      isOpen={resetScoreAlert}
+      isOpen={drawRequested}
       leastDestructiveRef={cancelRef}
       onClose={() => {}}
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            Reset score
+            Your opponent proposes a draw.
           </AlertDialogHeader>
 
-          <AlertDialogBody>
-            This will reset the score and restart the match. Your opponent needs
-            to agree. Are you sure you want to continue?
-          </AlertDialogBody>
+          <AlertDialogBody>Do you confirm?</AlertDialogBody>
 
           <AlertDialogFooter>
-            <Button ref={cancelRef} onClick={() => socket.send("reset-cancel")}>
-              Cancel
+            <Button ref={cancelRef} onClick={() => socket.send("draw-cancel")}>
+              No
             </Button>
             <Button
               colorScheme="red"
-              onClick={() => {
-                socket.send("reset-start");
-              }}
+              onClick={() => socket.send("draw-confirm")}
               ml={3}
             >
-              Yes, reset
+              Yes
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
