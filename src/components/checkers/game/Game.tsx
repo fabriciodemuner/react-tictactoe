@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import { ColorModeSwitcher } from "../../ColorModeSwitcher";
-import { CheckersRows, CheckersTilesPerRow } from "../constants";
+import { CheckersRows, CheckersTilesPerRow, tileIds } from "../constants";
 import {
   CheckersPlayer,
   CheckersResult,
@@ -130,25 +130,26 @@ export const CheckersGame = (props: CheckersGameProps) => {
         <Grid
           templateRows={`repeat(${CheckersRows}, 1fr)`}
           templateColumns={`repeat(${CheckersTilesPerRow}, 1fr)`}
-          gap="1"
+          border="1px solid #1A202C"
         >
           {[...Array(CheckersRows)].map((_, row) =>
-            [...Array(CheckersTilesPerRow)].map((_, col) => (
-              <CheckersGameTile
-                row={row}
-                col={col}
-                role={role}
-                currentPlayer={currentPlayer}
-                piece={
-                  tiles[
-                    (row * CheckersTilesPerRow + col + 1) as keyof CheckersTiles
-                  ]
-                }
-                gameOver={gameOver}
-                freeze={freeze}
-                handleTileClick={handleTileClick}
-              />
-            ))
+            [...Array(CheckersTilesPerRow)].map((_, col) => {
+              const id = row * CheckersTilesPerRow + col + 1;
+              return tileIds.includes(id) ? (
+                <CheckersGameTile
+                  row={row}
+                  col={col}
+                  role={role}
+                  currentPlayer={currentPlayer}
+                  piece={tiles[id as keyof CheckersTiles]}
+                  gameOver={gameOver}
+                  freeze={freeze}
+                  handleTileClick={handleTileClick}
+                />
+              ) : (
+                <Box fontSize="xl" bg="floralwhite" />
+              );
+            })
           )}
         </Grid>
       </Grid>
