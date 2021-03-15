@@ -10,18 +10,17 @@ import {
 import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import { ColorModeSwitcher } from "../../ColorModeSwitcher";
+import { CheckersRows, CheckersTilesPerRow } from "../constants";
 import {
-  CheckersTilesPerRow,
   CheckersPlayer,
   CheckersResult,
   CheckersScore,
   CheckersTiles,
-  CheckersRows,
 } from "../types";
+import { CheckersDrawRequestedAlert } from "./alerts/DrawRequestedAlert";
 import { CheckersGameOverModal } from "./alerts/GameOverModal";
 import { CheckersResetScoreRequestedAlert } from "./alerts/ResetScoreRequestedAlert";
 import { CheckersStartResetScoreAlert } from "./alerts/StartResetScoreAlert";
-import { CheckersDrawRequestedAlert } from "./alerts/DrawRequestedAlert";
 import { CheckersGameTile } from "./GameTile";
 
 type CheckersGameProps = {

@@ -6,9 +6,8 @@ import {
   Score,
   Tiles,
 } from "../common/types";
+import { CheckersTilesPerRow } from "./constants";
 
-export const CheckersTilesPerRow = 8;
-export const CheckersRows = 8;
 export type CheckersGameData = GameData<
   CheckersPlayer,
   typeof CheckersTilesPerRow

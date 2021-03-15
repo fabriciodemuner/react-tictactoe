@@ -14,12 +14,8 @@ import {
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { ColorModeSwitcher } from "../../ColorModeSwitcher";
-import {
-  CheckersRows,
-  CheckersScore,
-  CheckersTiles,
-  CheckersTilesPerRow,
-} from "../types";
+import { CheckersRows, CheckersTilesPerRow } from "../constants";
+import { CheckersScore, CheckersTiles } from "../types";
 import { CheckersSpectatorTile } from "./SpectatorTile";
 
 type CheckersSpectatorViewProps = {
