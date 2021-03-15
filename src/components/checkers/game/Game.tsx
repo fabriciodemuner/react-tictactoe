@@ -130,7 +130,7 @@ export const CheckersGame = (props: CheckersGameProps) => {
         <Grid
           templateRows={`repeat(${CheckersRows}, 1fr)`}
           templateColumns={`repeat(${CheckersTilesPerRow}, 1fr)`}
-          border="1px solid #1A202C"
+          gap="2px"
         >
           {[...Array(CheckersRows)].map((_, row) =>
             [...Array(CheckersTilesPerRow)].map((_, col) => {

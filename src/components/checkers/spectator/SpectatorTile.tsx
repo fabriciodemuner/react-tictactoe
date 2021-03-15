@@ -1,4 +1,5 @@
 import { Center } from "@chakra-ui/react";
+import { FaCircle } from "react-icons/fa";
 import { CheckersPlayer } from "../types";
 
 interface CheckersSpectatorTileProps {
@@ -7,15 +8,11 @@ interface CheckersSpectatorTileProps {
 
 export const CheckersSpectatorTile = (props: CheckersSpectatorTileProps) => {
   const { playedBy } = props;
-  const color = !playedBy
-    ? undefined
-    : playedBy === "W"
-    ? "cornflowerblue"
-    : "coral";
+  const color = playedBy === "W" ? "floralwhite" : "#454545";
 
   return (
-    <Center border="1px" fontSize="xl" bg={color}>
-      {playedBy}
+    <Center fontSize="3xl" bg="lightslategray">
+      {playedBy && <FaCircle color={color} />}
     </Center>
   );
 };

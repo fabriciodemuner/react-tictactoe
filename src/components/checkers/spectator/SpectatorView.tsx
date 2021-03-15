@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { ColorModeSwitcher } from "../../ColorModeSwitcher";
-import { CheckersRows, CheckersTilesPerRow } from "../constants";
+import { CheckersRows, CheckersTilesPerRow, tileIds } from "../constants";
 import { CheckersScore, CheckersTiles } from "../types";
 import { CheckersSpectatorTile } from "./SpectatorTile";
 
@@ -45,18 +45,19 @@ export const CheckersSpectatorView = (props: CheckersSpectatorViewProps) => {
         <Grid
           templateRows={`repeat(${CheckersRows}, 1fr)`}
           templateColumns={`repeat(${CheckersTilesPerRow}, 1fr)`}
-          gap="1"
+          gap="2px"
         >
           {[...Array(CheckersRows)].map((_, row) =>
-            [...Array(CheckersTilesPerRow)].map((_, col) => (
-              <CheckersSpectatorTile
-                playedBy={
-                  tiles[
-                    (row * CheckersTilesPerRow + col + 1) as keyof CheckersTiles
-                  ]
-                }
-              />
-            ))
+            [...Array(CheckersTilesPerRow)].map((_, col) => {
+              const id = row * CheckersTilesPerRow + col + 1;
+              return tileIds.includes(id) ? (
+                <CheckersSpectatorTile
+                  playedBy={tiles[id as keyof CheckersTiles]}
+                />
+              ) : (
+                <Box fontSize="xl" bg="floralwhite" />
+              );
+            })
           )}
         </Grid>
 
