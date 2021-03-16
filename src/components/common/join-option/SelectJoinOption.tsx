@@ -5,11 +5,13 @@ import { NameTakenAlert } from "./alerts/NameTakenAlert";
 import { NotFoundAlert } from "./alerts/NotFoundAlert";
 import { NamedRoomInfo } from "./NamedRoomInfo";
 import { RandomRoomInfo } from "./RandomRoomInfo";
+import { ResumeMatchInfo } from "./ResumeMatchInfo";
 
 export enum JoinOption {
   random = "random-room",
   create = "create-room",
   join = "join-room",
+  resume = "resume-game",
 }
 
 type GameProps = {
@@ -36,7 +38,8 @@ export const SelectJoinOption = (props: GameProps) => {
       </Select>
       <Box mt={5} mx="5%" w="90%">
         {option === JoinOption.random && <RandomRoomInfo socket={socket} />}
-        {option && option !== JoinOption.random && (
+        {option === JoinOption.resume && <ResumeMatchInfo socket={socket} />}
+        {(option === JoinOption.create || option === JoinOption.join) && (
           <NamedRoomInfo option={option} socket={socket} />
         )}
       </Box>
