@@ -1,6 +1,6 @@
 import { Center } from "@chakra-ui/react";
-import { FaCircle } from "react-icons/fa";
 import { CheckersPlayer } from "../types";
+import { CheckersGamePiece } from "./GamePiece";
 
 interface CheckersGameTileProps {
   row: number;
@@ -8,6 +8,7 @@ interface CheckersGameTileProps {
   currentPlayer: CheckersPlayer;
   role: CheckersPlayer;
   piece: CheckersPlayer | undefined;
+  crown: boolean;
   gameOver: boolean;
   freeze: boolean;
   handleTileClick: (row: number, col: number, piece?: CheckersPlayer) => void;
@@ -20,11 +21,11 @@ export const CheckersGameTile = (props: CheckersGameTileProps) => {
     currentPlayer: player,
     role,
     piece,
+    crown,
     gameOver,
     freeze,
     handleTileClick,
   } = props;
-  const color = piece === "W" ? "floralwhite" : "#454545";
 
   const handleClick = () => {
     if (!gameOver && !freeze && role === player)
@@ -33,7 +34,7 @@ export const CheckersGameTile = (props: CheckersGameTileProps) => {
 
   return (
     <Center onClick={handleClick} fontSize="3xl" bg="lightslategray">
-      {piece && <FaCircle color={color} />}
+      {piece && <CheckersGamePiece role={piece} crown={crown} />}
     </Center>
   );
 };

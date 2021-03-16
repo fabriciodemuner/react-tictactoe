@@ -92,6 +92,7 @@ export const Checkers = (props: CheckersProps) => {
       64: undefined,
     };
   });
+  const [crowns, setCrowns] = useState<number[]>([]);
   const [currentPlayer, setCurrentPlayer] = useState<CheckersPlayer>();
   const [role, setRole] = useState<CheckersRole>();
   const [gameOver, setGameOver] = useState(false);
@@ -131,6 +132,7 @@ export const Checkers = (props: CheckersProps) => {
   socket.on("game-state", (data: CheckersGameState) => {
     console.log("GameState updated", data);
     setTiles(data.tiles);
+    setCrowns(data.crowns);
     setCurrentPlayer(data.currentPlayer);
     setGameOver(data.gameOver);
     setFreeze(data.freeze);
@@ -212,6 +214,7 @@ export const Checkers = (props: CheckersProps) => {
     <CheckersGame
       socket={socket}
       tiles={tiles}
+      crowns={crowns}
       role={role}
       currentPlayer={currentPlayer}
       gameOver={gameOver}

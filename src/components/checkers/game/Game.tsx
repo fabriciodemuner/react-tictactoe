@@ -26,6 +26,7 @@ import { CheckersGameTile } from "./GameTile";
 type CheckersGameProps = {
   socket: Socket;
   tiles: CheckersTiles;
+  crowns: number[];
   role: CheckersPlayer;
   currentPlayer: CheckersPlayer;
   gameOver: boolean;
@@ -41,6 +42,7 @@ export const CheckersGame = (props: CheckersGameProps) => {
   const {
     socket,
     tiles,
+    crowns,
     role,
     currentPlayer,
     gameOver,
@@ -142,6 +144,7 @@ export const CheckersGame = (props: CheckersGameProps) => {
                   role={role}
                   currentPlayer={currentPlayer}
                   piece={tiles[id as keyof CheckersTiles]}
+                  crown={crowns.includes(id)}
                   gameOver={gameOver}
                   freeze={freeze}
                   handleTileClick={handleTileClick}

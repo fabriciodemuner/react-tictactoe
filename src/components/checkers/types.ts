@@ -12,10 +12,15 @@ export type CheckersGameData = GameData<
   CheckersPlayer,
   typeof CheckersTilesPerRow
 >;
+
+type ExtraGameStateProps = Record<"crowns", number[]>;
+
 export type CheckersGameState = GameState<
   CheckersPlayer,
   typeof CheckersTilesPerRow
->;
+> &
+  ExtraGameStateProps;
+
 export type CheckersPlayer = "W" | "B";
 export type CheckersResult = Result<CheckersPlayer> | undefined;
 export type CheckersRole = Role<CheckersPlayer>;
