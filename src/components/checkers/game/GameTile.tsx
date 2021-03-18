@@ -1,40 +1,38 @@
 import { Center } from "@chakra-ui/react";
-import { CheckersPlayer } from "../types";
-import { CheckersGamePiece } from "./GamePiece";
+import { CheckersPiece, CheckersPlayer } from "../types";
+import { CheckersGamePiece } from "../common/Piece";
 
 interface CheckersGameTileProps {
   row: number;
   col: number;
   currentPlayer: CheckersPlayer;
   role: CheckersPlayer;
-  piece: CheckersPlayer | undefined;
-  crown: boolean;
+  piece: CheckersPiece | undefined;
   gameOver: boolean;
   freeze: boolean;
-  handleTileClick: (row: number, col: number, piece?: CheckersPlayer) => void;
+  handleTileClick: (row: number, col: number, piece?: CheckersPiece) => void;
 }
 
 export const CheckersGameTile = (props: CheckersGameTileProps) => {
   const {
     row,
     col,
-    currentPlayer: player,
+    currentPlayer,
     role,
     piece,
-    crown,
     gameOver,
     freeze,
     handleTileClick,
   } = props;
 
   const handleClick = () => {
-    if (!gameOver && !freeze && role === player)
+    if (!gameOver && !freeze && role === currentPlayer)
       handleTileClick(row, col, piece);
   };
 
   return (
     <Center onClick={handleClick} fontSize="3xl" bg="lightslategray">
-      {piece && <CheckersGamePiece role={piece} crown={crown} />}
+      {piece && <CheckersGamePiece piece={piece} />}
     </Center>
   );
 };

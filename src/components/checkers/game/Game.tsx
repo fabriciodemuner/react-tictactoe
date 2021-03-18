@@ -12,10 +12,10 @@ import { Socket } from "socket.io-client";
 import { ColorModeSwitcher } from "../../ColorModeSwitcher";
 import { CheckersRows, CheckersTilesPerRow, tileIds } from "../constants";
 import {
+  CheckersPiece,
   CheckersPlayer,
   CheckersResult,
   CheckersScore,
-  CheckersTiles,
 } from "../types";
 import { CheckersDrawRequestedAlert } from "./alerts/DrawRequestedAlert";
 import { CheckersGameOverModal } from "./alerts/GameOverModal";
@@ -25,8 +25,7 @@ import { CheckersGameTile } from "./GameTile";
 
 type CheckersGameProps = {
   socket: Socket;
-  tiles: CheckersTiles;
-  crowns: number[];
+  pieces: CheckersPiece[];
   role: CheckersPlayer;
   currentPlayer: CheckersPlayer;
   gameOver: boolean;
@@ -41,8 +40,7 @@ type CheckersGameProps = {
 export const CheckersGame = (props: CheckersGameProps) => {
   const {
     socket,
-    tiles,
-    crowns,
+    pieces,
     role,
     currentPlayer,
     gameOver,
@@ -69,14 +67,9 @@ export const CheckersGame = (props: CheckersGameProps) => {
     }
   }, [gameOver, openModal]);
 
-  const handleTileClick = (
-    row: number,
-    col: number,
-    piece?: CheckersPlayer
-  ) => {
-    console.log({ row, col }, piece, moveFrom, moveTo);
-    if (piece && piece === role) setMoveFrom({ row, col });
-    if (piece && piece !== role && moveFrom) setMoveTo({ row, col });
+  const handleTileClick = (row: number, col: number, piece?: CheckersPiece) => {
+    if (piece && piece.role === role) setMoveFrom({ row, col });
+    if (piece && piece.role !== role && moveFrom) setMoveTo({ row, col });
     if (!piece && moveFrom) setMoveTo({ row, col });
   };
 
@@ -143,8 +136,9 @@ export const CheckersGame = (props: CheckersGameProps) => {
                   col={col}
                   role={role}
                   currentPlayer={currentPlayer}
-                  piece={tiles[id as keyof CheckersTiles]}
-                  crown={crowns.includes(id)}
+                  piece={pieces.find(
+                    p => p.pos.row === row && p.pos.col === col
+                  )}
                   gameOver={gameOver}
                   freeze={freeze}
                   handleTileClick={handleTileClick}

@@ -15,16 +15,16 @@ import {
 import { useRef, useState } from "react";
 import { ColorModeSwitcher } from "../../ColorModeSwitcher";
 import { CheckersRows, CheckersTilesPerRow, tileIds } from "../constants";
-import { CheckersScore, CheckersTiles } from "../types";
+import { CheckersPiece, CheckersScore } from "../types";
 import { CheckersSpectatorTile } from "./SpectatorTile";
 
 type CheckersSpectatorViewProps = {
-  tiles: CheckersTiles;
+  pieces: CheckersPiece[];
   score: CheckersScore;
 } & ChakraProps;
 
 export const CheckersSpectatorView = (props: CheckersSpectatorViewProps) => {
-  const { tiles, score } = props;
+  const { pieces, score } = props;
   const [alert, setAlert] = useState(true);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
 
@@ -50,13 +50,12 @@ export const CheckersSpectatorView = (props: CheckersSpectatorViewProps) => {
           {[...Array(CheckersRows)].map((_, row) =>
             [...Array(CheckersTilesPerRow)].map((_, col) => {
               const id = row * CheckersTilesPerRow + col + 1;
-              return tileIds.includes(id) ? (
-                <CheckersSpectatorTile
-                  playedBy={tiles[id as keyof CheckersTiles]}
-                />
-              ) : (
-                <Box fontSize="xl" bg="floralwhite" />
+              if (!tileIds.includes(id))
+                return <Box fontSize="xl" bg="floralwhite" />;
+              const piece = pieces.find(
+                p => p.alive && p.pos.row === row && p.pos.col === col
               );
+              return <CheckersSpectatorTile piece={piece} />;
             })
           )}
         </Grid>
