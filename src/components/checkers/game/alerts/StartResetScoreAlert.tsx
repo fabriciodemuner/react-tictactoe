@@ -10,18 +10,20 @@ import {
 import { useRef } from "react";
 import { Socket } from "socket.io-client";
 
-interface TTTResetScoreAlertProps {
+interface CheckersStartResetScoreAlertProps {
   socket: Socket;
-  resetScoreAlert: boolean;
+  startResetScoreAlert: boolean;
 }
 
-export const TTTResetScoreAlert = (props: TTTResetScoreAlertProps) => {
-  const { socket, resetScoreAlert } = props;
+export const CheckersStartResetScoreAlert = (
+  props: CheckersStartResetScoreAlertProps
+) => {
+  const { socket, startResetScoreAlert } = props;
   const cancelRef = useRef<HTMLButtonElement | null>(null);
 
   return (
     <AlertDialog
-      isOpen={resetScoreAlert}
+      isOpen={startResetScoreAlert}
       leastDestructiveRef={cancelRef}
       onClose={() => {}}
     >

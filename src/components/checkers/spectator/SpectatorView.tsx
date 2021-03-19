@@ -14,16 +14,17 @@ import {
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { ColorModeSwitcher } from "../../ColorModeSwitcher";
-import { TTTScore, TTTTiles } from "../types";
-import { TTTSpectatorTile } from "./SpectatorTile";
+import { CheckersRows, CheckersTilesPerRow, tileIds } from "../constants";
+import { CheckersPiece, CheckersScore } from "../types";
+import { CheckersSpectatorTile } from "./SpectatorTile";
 
-type TTTSpectatorViewProps = {
-  tiles: TTTTiles;
-  score: TTTScore;
+type CheckersSpectatorViewProps = {
+  pieces: CheckersPiece[];
+  score: CheckersScore;
 } & ChakraProps;
 
-export const TTTSpectatorView = (props: TTTSpectatorViewProps) => {
-  const { tiles, score } = props;
+export const CheckersSpectatorView = (props: CheckersSpectatorViewProps) => {
+  const { pieces, score } = props;
   const [alert, setAlert] = useState(true);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
 
@@ -36,19 +37,27 @@ export const TTTSpectatorView = (props: TTTSpectatorViewProps) => {
             <Center fontSize="md">
               {Object.entries(score)
                 .map(el => `${el[0]}: ${el[1]}`)
-                .join(" | ")}{" "}
+                .join(" | ")}
             </Center>
             <Center fontSize="xl">Spectator</Center>
           </Flex>
         </Flex>
         <Grid
-          templateRows="repeat(3, 1fr)"
-          templateColumns="repeat(3, 1fr)"
-          gap="1"
+          templateRows={`repeat(${CheckersRows}, 1fr)`}
+          templateColumns={`repeat(${CheckersTilesPerRow}, 1fr)`}
+          gap="2px"
         >
-          {[...Array(9)].map((_, i) => (
-            <TTTSpectatorTile playedBy={tiles[(i + 1) as keyof TTTTiles]} />
-          ))}
+          {[...Array(CheckersRows)].map((_, row) =>
+            [...Array(CheckersTilesPerRow)].map((_, col) => {
+              const id = row * CheckersTilesPerRow + col + 1;
+              if (!tileIds.includes(id))
+                return <Box fontSize="xl" bg="floralwhite" />;
+              const piece = pieces.find(
+                p => p.alive && p.pos.row === row && p.pos.col === col
+              );
+              return <CheckersSpectatorTile piece={piece} />;
+            })
+          )}
         </Grid>
 
         <AlertDialog

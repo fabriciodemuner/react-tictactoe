@@ -10,44 +10,35 @@ import {
 import { useRef } from "react";
 import { Socket } from "socket.io-client";
 
-interface TTTResetScoreAlertProps {
+interface NotFoundAlertProps {
   socket: Socket;
-  resetScoreAlert: boolean;
+  notFound: boolean;
 }
 
-export const TTTResetScoreAlert = (props: TTTResetScoreAlertProps) => {
-  const { socket, resetScoreAlert } = props;
+export const NotFoundAlert = (props: NotFoundAlertProps) => {
+  const { socket, notFound } = props;
   const cancelRef = useRef<HTMLButtonElement | null>(null);
 
   return (
     <AlertDialog
-      isOpen={resetScoreAlert}
+      isOpen={notFound}
       leastDestructiveRef={cancelRef}
       onClose={() => {}}
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            Reset score
+            Room not found!
           </AlertDialogHeader>
 
-          <AlertDialogBody>
-            This will reset the score and restart the match. Your opponent needs
-            to agree. Are you sure you want to continue?
-          </AlertDialogBody>
+          <AlertDialogBody>Please insert a valid name.</AlertDialogBody>
 
           <AlertDialogFooter>
-            <Button ref={cancelRef} onClick={() => socket.send("reset-cancel")}>
-              Cancel
-            </Button>
             <Button
-              colorScheme="red"
-              onClick={() => {
-                socket.send("reset-start");
-              }}
-              ml={3}
+              ref={cancelRef}
+              onClick={() => socket.send("room-not-found-ok")}
             >
-              Yes, reset
+              Ok
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

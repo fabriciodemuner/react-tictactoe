@@ -1,11 +1,16 @@
 import { Box, ChakraProps, Flex, Select, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Socket } from "socket.io-client";
-import { JoinOption } from "../types";
 import { NameTakenAlert } from "./alerts/NameTakenAlert";
 import { NotFoundAlert } from "./alerts/NotFoundAlert";
 import { NamedRoomInfo } from "./NamedRoomInfo";
 import { RandomRoomInfo } from "./RandomRoomInfo";
+
+export enum JoinOption {
+  random = "random-room",
+  create = "create-room",
+  join = "join-room",
+}
 
 type GameProps = {
   socket: Socket;

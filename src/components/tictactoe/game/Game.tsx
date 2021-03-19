@@ -7,31 +7,37 @@ import {
   Grid,
   useDisclosure,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { ColorModeSwitcher } from "../../ColorModeSwitcher";
-import { Player, Result, Score, Tiles } from "../types";
-import { GameOverModal } from "./alerts/GameOverModal";
-import { NewGameAlert } from "./alerts/NewGameAlert";
-import { ResetScoreAlert } from "./alerts/ResetScoreAlert";
-import { SurrenderAlert } from "./alerts/SurrenderAlert";
-import { GameTile } from "./GameTile";
+import {
+  TTTNumOfTiles,
+  TTTPlayer,
+  TTTResult,
+  TTTScore,
+  TTTTiles,
+} from "../types";
+import { TTTGameOverModal } from "./alerts/GameOverModal";
+import { TTTNewGameAlert } from "./alerts/NewGameAlert";
+import { TTTResetScoreAlert } from "./alerts/ResetScoreAlert";
+import { TTTSurrenderAlert } from "./alerts/SurrenderAlert";
+import { TTTGameTile } from "./GameTile";
 
-type GameProps = {
+type TicTacToeGameProps = {
   socket: Socket;
-  tiles: Tiles;
-  role: Player;
-  currentPlayer: Player;
+  tiles: TTTTiles;
+  role: TTTPlayer;
+  currentPlayer: TTTPlayer;
   gameOver: boolean;
-  result: Result | undefined;
-  score: Score;
-  resetRequest: boolean;
+  result: TTTResult;
+  score: TTTScore;
+  resetRequested: boolean;
   freeze: boolean;
   opponentSurrender: boolean;
   resetScoreAlert: boolean;
 } & ChakraProps;
 
-export const Game = (props: GameProps) => {
+export const TicTacToeGame = (props: TicTacToeGameProps) => {
   const {
     socket,
     tiles,
@@ -40,7 +46,7 @@ export const Game = (props: GameProps) => {
     gameOver,
     result,
     score,
-    resetRequest,
+    resetRequested,
     freeze,
     opponentSurrender,
     resetScoreAlert,
@@ -104,12 +110,12 @@ export const Game = (props: GameProps) => {
           templateColumns="repeat(3, 1fr)"
           gap="1"
         >
-          {[...Array(9)].map((_, i) => (
-            <GameTile
+          {[...Array(TTTNumOfTiles)].map((_, i) => (
+            <TTTGameTile
               id={i + 1}
               role={role}
               currentPlayer={currentPlayer}
-              playedBy={tiles[(i + 1) as keyof Tiles]}
+              playedBy={tiles[(i + 1) as keyof TTTTiles]}
               gameOver={gameOver}
               freeze={freeze}
               socket={socket}
@@ -118,10 +124,13 @@ export const Game = (props: GameProps) => {
         </Grid>
       </Grid>
 
-      <NewGameAlert socket={socket} resetRequest={resetRequest} />
-      <SurrenderAlert socket={socket} opponentSurrender={opponentSurrender} />
-      <ResetScoreAlert socket={socket} resetScoreAlert={resetScoreAlert} />
-      <GameOverModal
+      <TTTNewGameAlert socket={socket} resetRequest={resetRequested} />
+      <TTTSurrenderAlert
+        socket={socket}
+        opponentSurrender={opponentSurrender}
+      />
+      <TTTResetScoreAlert socket={socket} resetScoreAlert={resetScoreAlert} />
+      <TTTGameOverModal
         socket={socket}
         gameOver={gameOver}
         result={result}

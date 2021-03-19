@@ -1,43 +1,17 @@
-export type Player = "O" | "X";
-export type Result = Player | "D";
-export type Tiles = {
-  1: Player | undefined;
-  2: Player | undefined;
-  3: Player | undefined;
-  4: Player | undefined;
-  5: Player | undefined;
-  6: Player | undefined;
-  7: Player | undefined;
-  8: Player | undefined;
-  9: Player | undefined;
-};
-export type Score = {
-  O: number;
-  X: number;
-  D: number;
-};
-export type Role = Player | "S";
-export enum JoinOption {
-  random = "random-room",
-  create = "create-room",
-  join = "join-room",
-}
-export type GameData = {
-  tiles: Tiles;
-  currentPlayer: Player;
-  role: Role;
-  waitingForOpponent: boolean;
-  joinOption: JoinOption;
-};
-export type GameState = {
-  score: Score;
-  players: { O: string; X: string };
-  currentPlayer: Player;
-  gameOver: boolean;
-  freeze: boolean;
-  resetRequest: boolean;
-  opponentSurrender: boolean;
-  waitingForOpponent: boolean;
-  result: Result;
-  tiles: Tiles;
-};
+import {
+  GameData,
+  GameState,
+  Result,
+  Role,
+  Score,
+  Tiles,
+} from "../common/types";
+
+export const TTTNumOfTiles = 9;
+export type TTTGameData = GameData<TTTPlayer, typeof TTTNumOfTiles>;
+export type TTTGameState = GameState<TTTPlayer, typeof TTTNumOfTiles>;
+export type TTTPlayer = "O" | "X";
+export type TTTResult = Result<TTTPlayer> | undefined;
+export type TTTRole = Role<TTTPlayer>;
+export type TTTScore = Score<TTTPlayer>;
+export type TTTTiles = Tiles<TTTPlayer, typeof TTTNumOfTiles>;

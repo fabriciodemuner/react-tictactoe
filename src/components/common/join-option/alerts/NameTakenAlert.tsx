@@ -7,36 +7,36 @@ import {
   AlertDialogOverlay,
   Button,
 } from "@chakra-ui/react";
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { Socket } from "socket.io-client";
 
-interface NotFoundAlertProps {
+interface NameTakenAlertProps {
   socket: Socket;
-  notFound: boolean;
+  nameTaken: boolean;
 }
 
-export const NotFoundAlert = (props: NotFoundAlertProps) => {
-  const { socket, notFound } = props;
+export const NameTakenAlert = (props: NameTakenAlertProps) => {
+  const { socket, nameTaken } = props;
   const cancelRef = useRef<HTMLButtonElement | null>(null);
 
   return (
     <AlertDialog
-      isOpen={notFound}
+      isOpen={nameTaken}
       leastDestructiveRef={cancelRef}
       onClose={() => {}}
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            Room not found!
+            This name is taken!
           </AlertDialogHeader>
 
-          <AlertDialogBody>Please insert a valid name.</AlertDialogBody>
+          <AlertDialogBody>Please insert another name.</AlertDialogBody>
 
           <AlertDialogFooter>
             <Button
               ref={cancelRef}
-              onClick={() => socket.send("room-not-found-ok")}
+              onClick={() => socket.send("room-name-taken-ok")}
             >
               Ok
             </Button>

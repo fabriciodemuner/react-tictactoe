@@ -9,17 +9,17 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import { Socket } from "socket.io-client";
-import { TTTResult } from "../../types";
+import { CheckersResult } from "../../types";
 
-interface TTTGameOverModalProps {
+interface CheckersGameOverModalProps {
   socket: Socket;
   gameOver: boolean;
-  result: TTTResult;
+  result: CheckersResult;
   isOpenModal: boolean;
   closeModal: () => void;
 }
 
-export const TTTGameOverModal = (props: TTTGameOverModalProps) => {
+export const CheckersGameOverModal = (props: CheckersGameOverModalProps) => {
   const { socket, gameOver, result, isOpenModal, closeModal } = props;
 
   return (
@@ -31,11 +31,11 @@ export const TTTGameOverModal = (props: TTTGameOverModalProps) => {
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{gameOver ? "Game Over!" : "Reset"}</ModalHeader>
+        <ModalHeader>{gameOver ? "Game Over!" : "Propose Draw"}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           {!gameOver
-            ? "The game is not finished! If you start a new match, it will count as a defeat. Start new game?"
+            ? "The game is not finished! Do you want to propose a draw and start a new game?"
             : result === "D"
             ? `It's a Draw! Start new game?`
             : `Player ${result} won! Start new game?`}
@@ -48,7 +48,7 @@ export const TTTGameOverModal = (props: TTTGameOverModalProps) => {
             colorScheme="red"
             ml={3}
             onClick={() => {
-              gameOver ? socket.send("new-game") : socket.send("surrender");
+              gameOver ? socket.send("new-game") : socket.send("draw-start");
               closeModal();
             }}
           >

@@ -7,38 +7,44 @@ import {
   AlertDialogOverlay,
   Button,
 } from "@chakra-ui/react";
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { Socket } from "socket.io-client";
 
-interface NameTakenAlertProps {
+interface CheckersResetScoreRequestedAlertProps {
   socket: Socket;
-  nameTaken: boolean;
+  resetScoreRequested: boolean;
 }
 
-export const NameTakenAlert = (props: NameTakenAlertProps) => {
-  const { socket, nameTaken } = props;
+export const CheckersResetScoreRequestedAlert = (
+  props: CheckersResetScoreRequestedAlertProps
+) => {
+  const { socket, resetScoreRequested } = props;
   const cancelRef = useRef<HTMLButtonElement | null>(null);
 
   return (
     <AlertDialog
-      isOpen={nameTaken}
+      isOpen={resetScoreRequested}
       leastDestructiveRef={cancelRef}
       onClose={() => {}}
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            This name is taken!
+            Your opponent wants to reset the score.
           </AlertDialogHeader>
 
-          <AlertDialogBody>Please insert another name.</AlertDialogBody>
+          <AlertDialogBody>Do you confirm?</AlertDialogBody>
 
           <AlertDialogFooter>
+            <Button ref={cancelRef} onClick={() => socket.send("reset-cancel")}>
+              Cancel
+            </Button>
             <Button
-              ref={cancelRef}
-              onClick={() => socket.send("room-name-taken-ok")}
+              colorScheme="red"
+              onClick={() => socket.send("reset-confirm")}
+              ml={3}
             >
-              Ok
+              Reset
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

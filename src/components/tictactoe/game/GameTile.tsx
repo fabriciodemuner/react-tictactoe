@@ -1,19 +1,18 @@
 import { Center } from "@chakra-ui/react";
-import React from "react";
 import { Socket } from "socket.io-client";
-import { Player } from "../types";
+import { TTTPlayer } from "../types";
 
-interface GameTileProps {
+interface TTTGameTileProps {
   id: number;
-  currentPlayer: Player;
-  role: Player;
-  playedBy: Player | undefined;
+  currentPlayer: TTTPlayer;
+  role: TTTPlayer;
+  playedBy: TTTPlayer | undefined;
   gameOver: boolean;
   freeze: boolean;
   socket: Socket;
 }
 
-export const GameTile = (props: GameTileProps) => {
+export const TTTGameTile = (props: TTTGameTileProps) => {
   const {
     id,
     currentPlayer: player,

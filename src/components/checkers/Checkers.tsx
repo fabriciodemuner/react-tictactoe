@@ -6,62 +6,52 @@ import {
   SelectJoinOption,
 } from "../common/join-option/SelectJoinOption";
 import { WaitingForOpponentAlert } from "./game/alerts/WaitingForOpponentAlert";
-import { TicTacToeGame } from "./game/Game";
-import { TTTSpectatorView } from "./spectator/SpectatorView";
+import { CheckersGame } from "./game/Game";
+import { CheckersSpectatorView } from "./spectator/SpectatorView";
 import {
-  TTTGameData,
-  TTTGameState,
-  TTTPlayer,
-  TTTResult,
-  TTTRole,
-  TTTScore,
-  TTTTiles,
+  CheckersGameData,
+  CheckersGameState,
+  CheckersPiece,
+  CheckersPlayer,
+  CheckersResult,
+  CheckersRole,
+  CheckersScore,
 } from "./types";
 
-type TicTacToeProps = {
+type CheckersProps = {
   socket: Socket;
 };
 
-export const TicTacToe = (props: TicTacToeProps) => {
+export const Checkers = (props: CheckersProps) => {
   const { socket } = props;
-  const [tiles, setTiles] = useState<TTTTiles>({
-    1: undefined,
-    2: undefined,
-    3: undefined,
-    4: undefined,
-    5: undefined,
-    6: undefined,
-    7: undefined,
-    8: undefined,
-    9: undefined,
-  });
-  const [currentPlayer, setCurrentPlayer] = useState<TTTPlayer>();
-  const [role, setRole] = useState<TTTRole>();
+  const [pieces, setPieces] = useState<CheckersPiece[]>([]);
+  const [currentPlayer, setCurrentPlayer] = useState<CheckersPlayer>();
+  const [role, setRole] = useState<CheckersRole>();
   const [gameOver, setGameOver] = useState(false);
-  const [result, setResult] = useState<TTTResult>();
-  const [score, setScore] = useState<TTTScore>({
-    O: 0,
-    X: 0,
+  const [result, setResult] = useState<CheckersResult>();
+  const [score, setScore] = useState<CheckersScore>({
+    B: 0,
+    W: 0,
     D: 0,
   });
   const [resetScoreRequested, setResetScoreRequested] = useState(false);
-  const [resetScoreAlert, setResetScoreAlert] = useState(false);
-  const [opponentSurrender, setOpponentSurrender] = useState(false);
+  const [startResetScoreAlert, setStartResetScoreAlert] = useState(false);
+  const [drawRequested, setDrawRequested] = useState(false);
   const [freeze, setFreeze] = useState(false);
   const [waitingForOpponent, setWaitingForOpponent] = useState(false);
   const [joinOption, setJoinOption] = useState<JoinOption>();
   const [nameTaken, setNameTaken] = useState(false);
   const [notFound, setRoomNotFound] = useState(false);
 
-  const setupGame = (data: TTTGameData) => {
-    setTiles(data.tiles);
+  const setupGame = (data: CheckersGameData) => {
+    setPieces(() => [...pieces, ...data.pieces]);
     setCurrentPlayer(data.currentPlayer);
     setRole(data.role);
     setWaitingForOpponent(data.waitingForOpponent);
     setJoinOption(data.joinOption);
   };
 
-  socket.on("setup", (data: TTTGameData) => {
+  socket.on("setup", (data: CheckersGameData) => {
     console.log("Setting up:", data);
     setupGame(data);
   });
@@ -71,37 +61,39 @@ export const TicTacToe = (props: TicTacToeProps) => {
     setWaitingForOpponent(false);
   });
 
-  socket.on("game-state", (data: TTTGameState) => {
+  socket.on("game-state", (data: CheckersGameState) => {
     console.log("GameState updated", data);
-    setTiles(data.tiles);
+    setPieces(data.pieces);
     setCurrentPlayer(data.currentPlayer);
     setGameOver(data.gameOver);
     setFreeze(data.freeze);
     setResult(data.result);
     setScore(data.score);
     setResetScoreRequested(data.resetRequested);
-    setOpponentSurrender(data.opponentSurrender);
     setWaitingForOpponent(data.waitingForOpponent);
   });
 
   socket.on("freeze", () => {
     setFreeze(true);
-    setResetScoreAlert(false);
+    setStartResetScoreAlert(false);
   });
 
-  socket.on("opp-surrender", () => {
-    setFreeze(true);
-    setOpponentSurrender(true);
+  socket.on("draw-start", () => {
+    setDrawRequested(true);
+  });
+  socket.on("draw-cancel", () => {
+    setDrawRequested(false);
+    setFreeze(false);
   });
 
   socket.on("reset-alert", () => {
-    setResetScoreAlert(true);
+    setStartResetScoreAlert(true);
   });
   socket.on("reset-start", () => {
     setResetScoreRequested(true);
   });
   socket.on("reset-cancel", () => {
-    setResetScoreAlert(false);
+    setStartResetScoreAlert(false);
     setResetScoreRequested(false);
     setFreeze(false);
   });
@@ -140,8 +132,8 @@ export const TicTacToe = (props: TicTacToeProps) => {
 
   if (role === "S")
     return (
-      <TTTSpectatorView
-        tiles={tiles}
+      <CheckersSpectatorView
+        pieces={pieces}
         score={score}
         textAlign="center"
         maxWidth="900px"
@@ -150,18 +142,18 @@ export const TicTacToe = (props: TicTacToeProps) => {
     );
 
   return (
-    <TicTacToeGame
+    <CheckersGame
       socket={socket}
-      tiles={tiles}
+      pieces={pieces}
       role={role}
       currentPlayer={currentPlayer}
       gameOver={gameOver}
       freeze={freeze}
       result={result}
       score={score}
-      resetRequested={resetScoreRequested}
-      opponentSurrender={opponentSurrender}
-      resetScoreAlert={resetScoreAlert}
+      resetScoreRequested={resetScoreRequested}
+      drawRequested={drawRequested}
+      startResetScoreAlert={startResetScoreAlert}
       textAlign="center"
       maxWidth="900px"
       mx="auto"
